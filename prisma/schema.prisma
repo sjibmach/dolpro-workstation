@@ -1,0 +1,198 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+    // directUrl = env("DIRECT_URL")
+}
+
+model Interpreters {
+    id        String   @id @default(uuid())
+    firstName String
+    lastName  String
+    email     String   @unique
+    phone     String
+    statusId  String
+    iban      String
+    notes     String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status    InterpreterStatuses    @relation(fields: [statusId], references: [id])
+    languages InterpreterLanguages[]
+    orders    Orders[]
+    payouts   Payouts[]
+}
+
+model InterpreterLanguages {
+    interpreterId String
+    languageId    String
+
+    interpreter Interpreters @relation(fields: [interpreterId], references: [id])
+    language    Languages    @relation(fields: [languageId], references: [id])
+
+    @@id([interpreterId, languageId])
+}
+
+model Clients {
+    id                 String   @id @default(uuid())
+    name               String
+    typeId             String
+    contactPerson      String?
+    phone              String?
+    email              String?
+    street             String?
+    houseNumber        String?
+    postalCode         String?
+    cityId             String?
+    billingStreet      String?
+    billingHouseNumber String?
+    billingPostalCode  String?
+    billingCityId      String?
+    hourlyRate         Decimal?
+    notes              String?
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+
+    type        ClientTypes @relation(fields: [typeId], references: [id])
+    city        Cities?     @relation("ClientCity", fields: [cityId], references: [id])
+    billingCity Cities?     @relation("ClientBillingCity", fields: [billingCityId], references: [id])
+    orders      Orders[]
+    invoices    Invoices[]
+}
+
+model Orders {
+    id                 String   @id @default(uuid())
+    clientId           String
+    interpreterId      String?
+    serviceTypeId      String
+    sourceLanguageId   String
+    targetLanguageId   String
+    date               DateTime
+    startTime          DateTime
+    endTime            DateTime
+    durationMinutes    Int
+    street             String
+    houseNumber        String
+    postalCode         String
+    cityId             String
+    statusId           String
+    urgencyId          String
+    description        String?
+    canceledById       String?
+    cancellationReason String?
+    notes              String?
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+
+    client         Clients        @relation(fields: [clientId], references: [id])
+    interpreter    Interpreters?  @relation(fields: [interpreterId], references: [id])
+    serviceType    OrderTypes     @relation(fields: [serviceTypeId], references: [id])
+    sourceLanguage Languages      @relation("OrderSourceLanguage", fields: [sourceLanguageId], references: [id])
+    targetLanguage Languages      @relation("OrderTargetLanguage", fields: [targetLanguageId], references: [id])
+    city           Cities         @relation(fields: [cityId], references: [id])
+    status         OrderStatuses  @relation(fields: [statusId], references: [id])
+    urgency        Urgencies      @relation(fields: [urgencyId], references: [id])
+    canceledBy     CancelSources? @relation(fields: [canceledById], references: [id])
+    payouts        Payouts[]
+    invoice        Invoices?
+}
+
+model Invoices {
+    id            String   @id @default(uuid())
+    clientId      String
+    orderId       String   @unique
+    invoiceNumber String
+    amount        Decimal
+    issueDate     DateTime
+    dueDate       DateTime
+    statusId      String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    client Clients         @relation(fields: [clientId], references: [id])
+    order  Orders          @relation(fields: [orderId], references: [id])
+    status InvoiceStatuses @relation(fields: [statusId], references: [id])
+}
+
+model Payouts {
+    id            String   @id @default(uuid())
+    interpreterId String
+    orderId       String   @unique
+    amount        Decimal
+    payoutDate    DateTime
+    statusId      String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    interpreter Interpreters   @relation(fields: [interpreterId], references: [id])
+    order       Orders         @relation(fields: [orderId], references: [id])
+    status      PayoutStatuses @relation(fields: [statusId], references: [id])
+}
+
+model Languages {
+    id           String                 @id @default(uuid())
+    name         String
+    code         String
+    interpreters InterpreterLanguages[]
+    ordersSource Orders[]               @relation("OrderSourceLanguage")
+    ordersTarget Orders[]               @relation("OrderTargetLanguage")
+}
+
+model Cities {
+    id             String    @id @default(uuid())
+    name           String
+    clients        Clients[] @relation("ClientCity")
+    billingClients Clients[] @relation("ClientBillingCity")
+    orders         Orders[]
+}
+
+model ClientTypes {
+    id      String    @id @default(uuid())
+    name    String
+    clients Clients[]
+}
+
+model OrderTypes {
+    id     String   @id @default(uuid())
+    name   String
+    orders Orders[]
+}
+
+model InterpreterStatuses {
+    id           String         @id @default(uuid())
+    name         String
+    interpreters Interpreters[]
+}
+
+model OrderStatuses {
+    id     String   @id @default(uuid())
+    name   String
+    orders Orders[]
+}
+
+model InvoiceStatuses {
+    id       String     @id @default(uuid())
+    name     String
+    invoices Invoices[]
+}
+
+model PayoutStatuses {
+    id      String    @id @default(uuid())
+    name    String
+    payouts Payouts[]
+}
+
+model Urgencies {
+    id     String   @id @default(uuid())
+    name   String
+    orders Orders[]
+}
+
+model CancelSources {
+    id     String   @id @default(uuid())
+    name   String
+    orders Orders[]
+}
