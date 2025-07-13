@@ -1,12 +1,11 @@
-import React from 'react';
+import TwoColumnsLayout from '@/components/layout/two-column-layout';
+import React, { ReactNode } from 'react';
 
-const ClientsLayout = () => {
+const ClientsLayout = ({ children }: { children: ReactNode }) => {
     return (
-        <aside className="hidden h-screen lg:order-first lg:block lg:shrink-0">
-            <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
-                hallo hallo
-            </div>
-        </aside>
+        <TwoColumnsLayout asideContent={<div>Aside Content</div>}>
+            {children}
+        </TwoColumnsLayout>
     );
 };
 
