@@ -39,7 +39,7 @@ const ClientsSidetable = async () => {
                             last={index === clients.length - 1}
                         >
                             <Link
-                                className="flex items-center justify-between gap-2"
+                                className="flex items-center justify-between gap-2 bg-rose-500"
                                 href={`/clients/${client.id}`}
                                 title={client.name}
                             >
