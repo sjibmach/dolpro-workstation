@@ -1,10 +1,10 @@
 import TwoColumnsLayout from '@/components/layout/two-column-layout';
-import ClientsSidetable from '@/components/sidetables/clients-sidetable';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import ClientsSideBar from '@/components/sidetables/clients-sidebar';
 
-const ClientsLayout = ({ children }: { children: ReactNode }) => {
+const ClientsLayout = async ({ children }: { children: ReactNode }) => {
     return (
-        <TwoColumnsLayout asideContent={<ClientsSidetable />}>
+        <TwoColumnsLayout asideContent={<ClientsSideBar />}>
             {children}
         </TwoColumnsLayout>
     );

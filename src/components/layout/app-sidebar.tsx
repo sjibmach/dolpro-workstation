@@ -119,7 +119,7 @@ const AppSidebar = ({
                             <div className="flex h-16 shrink-0 items-center">
                                 <img
                                     alt="Your Company"
-                                    src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                                    src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=amber&shade=500"
                                     className="h-8 w-auto"
                                 />
                             </div>
@@ -178,7 +178,7 @@ const AppSidebar = ({
                                     href={item.href}
                                     className={cn(
                                         item.current(pathname)
-                                            ? 'bg-gray-800 text-indigo-400 dark:text-indigo-400'
+                                            ? 'bg-gray-800 text-amber-400 dark:text-amber-400'
                                             : 'text-gray-400 hover:bg-gray-800 hover:text-white',
                                         'group flex w-full flex-col items-center justify-center gap-x-3 rounded-md py-3 text-sm leading-6 font-semibold'
                                     )}

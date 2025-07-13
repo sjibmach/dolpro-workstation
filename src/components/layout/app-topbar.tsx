@@ -34,7 +34,7 @@ const AppTopbar = ({
     };
 
     return (
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-gray-700 dark:bg-gray-900">
             <button
                 type="button"
                 onClick={() => setSidebarOpen(true)}
@@ -50,8 +50,8 @@ const AppTopbar = ({
                 className="h-6 w-px bg-gray-900/10 lg:hidden"
             />
 
-            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <form
+            <div className="flex flex-1 justify-between gap-x-4 self-stretch lg:gap-x-6">
+                {/* <form
                     action="#"
                     method="GET"
                     className="grid flex-1 grid-cols-1"
@@ -67,7 +67,8 @@ const AppTopbar = ({
                         aria-hidden="true"
                         className="pointer-events-none col-start-1 row-start-1 size-5 self-center text-gray-400"
                     />
-                </form>
+                </form> */}
+                <div></div>
                 <div className="flex items-center gap-x-4 lg:gap-x-6">
                     <button
                         type="button"
@@ -112,7 +113,7 @@ const AppTopbar = ({
                             <span className="hidden lg:flex lg:items-center">
                                 <span
                                     aria-hidden="true"
-                                    className="ml-4 text-sm/6 font-semibold text-gray-900"
+                                    className="ml-4 text-sm/6 font-semibold"
                                 >
                                     Tom Cook
                                 </span>

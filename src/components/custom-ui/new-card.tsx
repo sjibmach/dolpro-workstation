@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Switch } from '@headlessui/react';
 import Link from 'next/link';
 import * as React from 'react';
 import { IconType } from 'react-icons';
@@ -94,7 +93,7 @@ const NewCardBody = React.forwardRef<HTMLDivElement, NewCardBodyProps>(
             <ul
                 className={cn(
                     className,
-                    'rounded-xl border border-gray-300 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:shadow-gray-800'
+                    'rounded-xl border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900 dark:shadow-gray-800'
                 )}
             >
                 {children}
