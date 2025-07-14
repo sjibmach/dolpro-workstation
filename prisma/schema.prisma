@@ -78,7 +78,7 @@ model Client {
     name               String
     typeId             String
     type               ClientType          @relation(fields: [typeId], references: [id])
-    statusId           String?
+    statusId           String?             @default("new")
     status             ClientStatus?       @relation(fields: [statusId], references: [id])
     statusReasonId     String?
     statusReason       ClientStatusReason? @relation(fields: [statusReasonId], references: [id])
@@ -107,10 +107,28 @@ model Client {
     @@map("clients")
 }
 
+enum ClientStatusId {
+    new
+    contacting
+    failedContact
+    interested
+    offerToSend
+    offerSent
+    negotiation
+    contactLater
+    activeWithoutContract
+    contracted
+    inactive
+    notInterested
+    blacklisted
+}
+
 model ClientStatus {
-    id      String   @id @default(cuid())
-    name    String
-    clients Client[]
+    id        String   @id @default(cuid())
+    name      String
+    sortOrder Int?
+    active    Boolean  @default(true)
+    clients   Client[]
 
     @@map("client_statuses")
 }

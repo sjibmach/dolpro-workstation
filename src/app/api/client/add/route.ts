@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    const { name, clientTypeId }: TAddClient = await req.json();
+    const { name, clientTypeId, statusId }: TAddClient = await req.json();
 
     if (!name || !clientTypeId) {
         return NextResponse.json(
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
             data: {
                 name,
                 typeId: clientTypeId!,
+                statusId: statusId || null, // Optional statusId
             },
         });
 

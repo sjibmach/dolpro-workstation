@@ -9,11 +9,7 @@ const ClientsSideBar = async () => {
         },
     });
 
-    return (
-        <ClientsSidetable
-            clients={clients.map(cl => ({ name: cl.name, id: cl.id }))}
-        />
-    );
+    return <ClientsSidetable clients={clients} />;
 };
 
 export default ClientsSideBar;

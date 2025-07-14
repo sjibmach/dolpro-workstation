@@ -1,3 +1,5 @@
+'use client';
+
 import {
     FormControl,
     FormDescription,
@@ -25,6 +27,7 @@ import { Control, UseFormSetValue } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 const RHFCombobox = ({
     control,
@@ -35,6 +38,7 @@ const RHFCombobox = ({
     showError = true,
     options,
     setValue,
+    creatable = false,
 }: {
     control: Control<any>;
     name: string;
@@ -44,7 +48,33 @@ const RHFCombobox = ({
     showError?: boolean;
     options: { id: string; name: string }[];
     setValue: UseFormSetValue<any>;
+    creatable?: boolean;
 }) => {
+    const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState('');
+    const [localOptions, setLocalOptions] = useState(options);
+
+    useEffect(() => {
+        setLocalOptions(options);
+    }, [options]);
+
+    const filteredOptions = useMemo(() => {
+        return localOptions.filter(option =>
+            option.name.toLowerCase().includes(query.toLowerCase())
+        );
+    }, [query, localOptions]);
+
+    const exactMatch = localOptions.some(
+        option => option.name.toLowerCase() === query.toLowerCase()
+    );
+
+    const handleCreate = () => {
+        const newOption = { id: query, name: query };
+        setLocalOptions(prev => [...prev, newOption]);
+        setValue(name, newOption.id);
+        setOpen(false);
+    };
+
     return (
         <FormField
             control={control}
@@ -52,59 +82,90 @@ const RHFCombobox = ({
             render={({ field }) => (
                 <FormItem className="flex flex-col">
                     {label && <FormLabel>{label}</FormLabel>}
-                    <Popover>
+                    <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <FormControl>
                                 <Button
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        'w-[200px] justify-between',
+                                        'max-w-[300px] justify-between',
                                         !field.value && 'text-muted-foreground'
                                     )}
                                 >
                                     {field.value
-                                        ? options.find(
-                                              option =>
-                                                  option.id === field.value
+                                        ? localOptions.find(
+                                              opt => opt.id === field.value
                                           )?.name
                                         : 'Auswählen'}
                                     <ChevronsUpDown className="opacity-50" />
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                            <Command>
+                        <PopoverContent className="max-w-[300px] p-0">
+                            <Command
+                                onKeyDown={e => {
+                                    if (
+                                        creatable &&
+                                        e.key === 'Enter' &&
+                                        query &&
+                                        !exactMatch
+                                    ) {
+                                        e.preventDefault();
+                                        handleCreate();
+                                    }
+                                }}
+                            >
                                 <CommandInput
                                     placeholder={placeholder || 'Suchen...'}
                                     className="h-9"
+                                    value={query}
+                                    onValueChange={setQuery}
                                 />
                                 <CommandList>
-                                    <CommandEmpty>
-                                        Nichts gefunden.
-                                    </CommandEmpty>
-                                    <CommandGroup>
-                                        {options.map(option => (
-                                            <CommandItem
-                                                value={option.id}
-                                                key={option.id}
-                                                onSelect={() => {
-                                                    setValue(name, option.id);
-                                                }}
-                                            >
-                                                {option.name}
-                                                <Check
-                                                    className={cn(
-                                                        'ml-auto',
-                                                        option.id ===
-                                                            field.value
-                                                            ? 'opacity-100'
-                                                            : 'opacity-0'
-                                                    )}
-                                                />
-                                            </CommandItem>
-                                        ))}
-                                    </CommandGroup>
+                                    {filteredOptions.length > 0 && (
+                                        <CommandGroup heading="Vorschläge">
+                                            {filteredOptions.map(option => (
+                                                <CommandItem
+                                                    key={option.id}
+                                                    value={option.name}
+                                                    onSelect={() => {
+                                                        setValue(
+                                                            name,
+                                                            option.id
+                                                        );
+                                                        setOpen(false);
+                                                    }}
+                                                >
+                                                    {option.name}
+                                                    <Check
+                                                        className={cn(
+                                                            'ml-auto',
+                                                            option.id ===
+                                                                field.value
+                                                                ? 'opacity-100'
+                                                                : 'opacity-0'
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    )}
+
+                                    {creatable &&
+                                        !exactMatch &&
+                                        query.trim() !== '' && (
+                                            <CommandGroup heading="Neu erstellen">
+                                                <CommandItem
+                                                    onSelect={handleCreate}
+                                                    value={`create-${query}`}
+                                                >
+                                                    <span>
+                                                        „{query}“ erstellen
+                                                    </span>
+                                                </CommandItem>
+                                            </CommandGroup>
+                                        )}
                                 </CommandList>
                             </Command>
                         </PopoverContent>

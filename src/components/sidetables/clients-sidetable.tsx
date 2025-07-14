@@ -13,37 +13,8 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 import { ClientAddModal } from '../modals/app-modals/client-add-modal';
-import TestModal from '../modals/app-modals/test-modal';
-import { Button } from '../ui/button';
-import { toast } from 'sonner';
-
-const clientsTest = [
-    { id: '1', name: 'Client A' },
-    { id: '2', name: 'Client B' },
-    { id: '3', name: 'Client C' },
-    { id: '4', name: 'Client D' },
-    { id: '5', name: 'Client E' },
-    { id: '6', name: 'Client F' },
-    { id: '7', name: 'Client G' },
-    { id: '8', name: 'Client H' },
-    { id: '9', name: 'Client I' },
-    { id: '10', name: 'Client J' },
-    { id: '11', name: 'Client K' },
-    { id: '12', name: 'Client L' },
-    { id: '13', name: 'Client M' },
-    { id: '14', name: 'Client N' },
-    { id: '15', name: 'Client O' },
-    { id: '16', name: 'Client P' },
-    { id: '17', name: 'Client Q' },
-    { id: '18', name: 'Client R' },
-    { id: '19', name: 'Client S' },
-    { id: '20', name: 'Client T' },
-];
-
-type Client = {
-    id: string;
-    name: string;
-};
+import { Badge } from '../ui/badge';
+import { Client } from '@prisma/client';
 
 const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
     const params = useParams();
@@ -79,16 +50,25 @@ const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
                                     compact
                                     last={index === filteredClients.length - 1}
                                     className={cn(
-                                        'flex items-center justify-between gap-2',
+                                        'flex items-center justify-between',
                                         client.id === clientId
                                             ? 'bg-amber-100 dark:bg-amber-800'
                                             : 'hover:bg-amber-50 dark:hover:bg-amber-700'
                                     )}
                                 >
-                                    <span className="text-sm">
-                                        {client.name}
-                                    </span>
-                                    <span className="text-xs">{client.id}</span>
+                                    <div className="flex flex-col justify-between">
+                                        <span className="text-sm font-medium">
+                                            {client.name}
+                                        </span>
+                                        {client.statusId && (
+                                            <Badge
+                                                className="text-xs"
+                                                variant="secondary"
+                                            >
+                                                {client.statusId}
+                                            </Badge>
+                                        )}
+                                    </div>
                                 </NewCardItem>
                             </Link>
                         ))}
