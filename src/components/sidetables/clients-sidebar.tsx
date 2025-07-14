@@ -1,13 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import ClientsSidetable from './clients-sidetable';
-import { Clients } from '@prisma/client';
+import { Client } from '@prisma/client';
 
 const ClientsSideBar = async () => {
-    const clients: Clients[] = await prisma.clients.findMany({
+    const clients: Client[] = await prisma.client.findMany({
         orderBy: {
             createdAt: 'desc',
         },
-        take: 5,
     });
 
     return (

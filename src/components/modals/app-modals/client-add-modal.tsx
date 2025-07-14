@@ -9,36 +9,60 @@ import { Form } from '@/components/ui/form';
 import RHFInput from '@/components/rhf/rhf-input';
 import RHFCombobox from '@/components/rhf/rhf-combobox';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import useClientAddModal from './modal-hooks/use-client-add-modal';
+import { toast } from 'sonner';
 
 const clientSchema = z.object({
     name: z.string().min(2, {
         message: 'Name muss mindestens 2 Zeichen lang sein.',
     }),
-    clientTypeId: z.string().nullable(),
+    clientTypeId: z.string(),
 });
 
+export type TAddClient = z.infer<typeof clientSchema>;
+
 export function ClientAddModal() {
+    const router = useRouter();
+
+    const { isOpen, onOpen, onOpenChange, onClose } = useClientAddModal();
+
     const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
         queryKey: ['client-types'],
         queryFn: async () =>
             fetch('/api/base-data/client-types').then(res => res.json()),
     });
 
-    console.log('Client Types:', clientTypes);
-
-    const form = useForm<z.infer<typeof clientSchema>>({
+    const form = useForm<TAddClient>({
         resolver: zodResolver(clientSchema),
         defaultValues: {
             name: '',
-            clientTypeId: null,
+            // clientTypeId: null,
         },
     });
 
-    function onSubmit(values: z.infer<typeof clientSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
-    }
+    const onSubmit = async (values: TAddClient) => {
+        console.log('values', values);
+
+        const promise = axios.post('/api/client/add', values);
+
+        toast.promise(promise, {
+            loading: 'Kunde wird hinzugefügt...',
+            success: 'Kunde erfolgreich hinzugefügt',
+            error: 'Fehler beim Hinzufügen des Kunden',
+        });
+
+        try {
+            await promise;
+            onClose();
+        } catch (error) {
+            console.error('Fehler beim Senden des Formulars:', error);
+        } finally {
+            form.reset();
+            router.refresh();
+        }
+    };
 
     const body = (
         <Form {...form}>
@@ -54,7 +78,6 @@ export function ClientAddModal() {
                     name="clientTypeId"
                     control={form.control}
                     label="Sprache"
-                    // placeholder="Auswählen"
                     options={clientTypes || []}
                     setValue={form.setValue}
                 />
@@ -70,14 +93,18 @@ export function ClientAddModal() {
     );
 
     return (
-        <Modal
-            trigger={trigger}
-            size="md"
-            title="Auftragsgeber hinzufügen"
-            body={body}
-            dialogAction={form.handleSubmit(onSubmit)}
-            dialogClose={true}
-            dialogActionLabel="Hinzufügen"
-        />
+        <>
+            <Modal
+                trigger={trigger}
+                size="md"
+                title="Auftragsgeber hinzufügen"
+                body={body}
+                dialogAction={form.handleSubmit(onSubmit)}
+                dialogClose={true}
+                dialogActionLabel="Hinzufügen"
+                open={isOpen}
+                onOpenChange={onOpenChange}
+            />
+        </>
     );
 }

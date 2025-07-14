@@ -14,6 +14,8 @@ import { useState } from 'react';
 
 import { ClientAddModal } from '../modals/app-modals/client-add-modal';
 import TestModal from '../modals/app-modals/test-modal';
+import { Button } from '../ui/button';
+import { toast } from 'sonner';
 
 const clientsTest = [
     { id: '1', name: 'Client A' },
@@ -48,7 +50,7 @@ const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
     const clientId = params.clientId as string;
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredClients = clientsTest?.filter(client =>
+    const filteredClients = clients?.filter(client =>
         client.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 

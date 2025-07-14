@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/app-layout';
 import ThemeProviders from '@/providers/theme-provider';
 import ClientOnly from '@/components/client-only';
 import ReactQueryProvider from '@/providers/react-query-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -33,6 +34,7 @@ export default function RootLayout({
                 <ClientOnly>
                     <ReactQueryProvider>
                         <ThemeProviders>
+                            <Toaster />
                             <AppLayout>{children}</AppLayout>
                         </ThemeProviders>
                     </ReactQueryProvider>

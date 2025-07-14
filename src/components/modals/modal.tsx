@@ -21,6 +21,8 @@ const Modal = ({
     dialogActionLabel,
     dialogAction,
     size = 'sm',
+    open,
+    onOpenChange,
 }: {
     trigger?: ReactNode;
     title?: ReactNode;
@@ -30,9 +32,11 @@ const Modal = ({
     dialogActionLabel?: string;
     dialogAction?: () => void;
     size?: 'sm' | 'md' | 'lg' | 'xl';
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }) => {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent
                 className={cn(
@@ -62,7 +66,7 @@ const Modal = ({
                         </DialogClose>
                     )}
                     {dialogAction && (
-                        <Button type="submit" onClick={dialogAction}>
+                        <Button onClick={dialogAction}>
                             {dialogActionLabel}
                         </Button>
                     )}

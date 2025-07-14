@@ -3,196 +3,262 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-    // directUrl = env("DIRECT_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
-model Interpreters {
-    id        String   @id @default(uuid())
-    firstName String
-    lastName  String
-    email     String   @unique
-    phone     String
-    statusId  String
-    iban      String
-    notes     String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+// ----------------------
+// Stammdaten
+// ----------------------
 
-    status    InterpreterStatuses    @relation(fields: [statusId], references: [id])
-    languages InterpreterLanguages[]
-    orders    Orders[]
-    payouts   Payouts[]
+model Language {
+    id           String                @id @default(cuid())
+    name         String
+    interpreters InterpreterLanguage[]
+    jobsFrom     Job[]                 @relation("JobFromLanguage")
+    jobsTo       Job[]                 @relation("JobToLanguage")
+
+    @@map("languages")
 }
 
-model InterpreterLanguages {
-    interpreterId String
-    languageId    String
+model City {
+    id                    String                     @id @default(cuid())
+    name                  String
+    interpretersPreferred InterpreterPreferredCity[]
+    jobs                  Job[]
+    clients               Client[]
 
-    interpreter Interpreters @relation(fields: [interpreterId], references: [id])
-    language    Languages    @relation(fields: [languageId], references: [id])
-
-    @@id([interpreterId, languageId])
+    @@map("cities")
 }
 
-model Clients {
-    id                 String   @id @default(uuid())
+model AssignmentType {
+    id   String @id @default(cuid())
+    name String
+    jobs Job[]
+
+    @@map("assignment_types")
+}
+
+model JobType {
+    id   String @id @default(cuid())
+    name String
+    jobs Job[]
+
+    @@map("job_types")
+}
+
+model JobPriority {
+    id   String @id @default(cuid())
+    name String
+    jobs Job[]
+
+    @@map("job_priorities")
+}
+
+// ----------------------
+// Users
+// ----------------------
+
+model User {
+    id      String       @id @default(cuid())
+    email   String       @unique
+    name    String
+    clients ClientNote[]
+
+    @@map("users")
+}
+
+// ----------------------
+// Auftraggeber (Clients)
+// ----------------------
+
+model Client {
+    id                 String              @id @default(cuid())
     name               String
     typeId             String
-    contactPerson      String?
-    phone              String?
+    type               ClientType          @relation(fields: [typeId], references: [id])
+    statusId           String?
+    status             ClientStatus?       @relation(fields: [statusId], references: [id])
+    statusReasonId     String?
+    statusReason       ClientStatusReason? @relation(fields: [statusReasonId], references: [id])
+    statusFollowUpDate DateTime?
     email              String?
-    street             String?
-    houseNumber        String?
-    postalCode         String?
+    phone              String?
+    contactName        String?
+    contactEmail       String?
+    contactPhone       String?
+    position           String?
+    address            String?
+    zip                String?
     cityId             String?
-    billingStreet      String?
-    billingHouseNumber String?
-    billingPostalCode  String?
-    billingCityId      String?
-    hourlyRate         Decimal?
+    city               City?               @relation(fields: [cityId], references: [id])
+    invoiceAddress     String?
+    invoiceZip         String?
+    invoiceCity        String?
     notes              String?
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+    creatorId          String?
+    updatorId          String?
+    createdAt          DateTime            @default(now())
+    updatedAt          DateTime            @updatedAt
+    jobs               Job[]
+    notesHistory       ClientNote[]
 
-    type        ClientTypes @relation(fields: [typeId], references: [id])
-    city        Cities?     @relation("ClientCity", fields: [cityId], references: [id])
-    billingCity Cities?     @relation("ClientBillingCity", fields: [billingCityId], references: [id])
-    orders      Orders[]
-    invoices    Invoices[]
+    @@map("clients")
 }
 
-model Orders {
-    id                 String   @id @default(uuid())
-    clientId           String
-    interpreterId      String?
-    serviceTypeId      String
-    sourceLanguageId   String
-    targetLanguageId   String
-    date               DateTime
-    startTime          DateTime
-    endTime            DateTime
-    durationMinutes    Int
-    street             String
-    houseNumber        String
-    postalCode         String
-    cityId             String
-    statusId           String
-    urgencyId          String
-    description        String?
-    canceledById       String?
-    cancellationReason String?
-    notes              String?
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+model ClientStatus {
+    id      String   @id @default(cuid())
+    name    String
+    clients Client[]
 
-    client         Clients        @relation(fields: [clientId], references: [id])
-    interpreter    Interpreters?  @relation(fields: [interpreterId], references: [id])
-    serviceType    OrderTypes     @relation(fields: [serviceTypeId], references: [id])
-    sourceLanguage Languages      @relation("OrderSourceLanguage", fields: [sourceLanguageId], references: [id])
-    targetLanguage Languages      @relation("OrderTargetLanguage", fields: [targetLanguageId], references: [id])
-    city           Cities         @relation(fields: [cityId], references: [id])
-    status         OrderStatuses  @relation(fields: [statusId], references: [id])
-    urgency        Urgencies      @relation(fields: [urgencyId], references: [id])
-    canceledBy     CancelSources? @relation(fields: [canceledById], references: [id])
-    payouts        Payouts[]
-    invoice        Invoices?
+    @@map("client_statuses")
 }
 
-model Invoices {
-    id            String   @id @default(uuid())
-    clientId      String
-    orderId       String   @unique
-    invoiceNumber String
-    amount        Decimal
-    issueDate     DateTime
-    dueDate       DateTime
-    statusId      String
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
+model ClientStatusReason {
+    id        String   @id @default(cuid())
+    name      String
+    active    Boolean  @default(true)
+    sortOrder Int
+    clients   Client[]
 
-    client Clients         @relation(fields: [clientId], references: [id])
-    order  Orders          @relation(fields: [orderId], references: [id])
-    status InvoiceStatuses @relation(fields: [statusId], references: [id])
+    @@map("client_status_reasons")
 }
 
-model Payouts {
-    id            String   @id @default(uuid())
+model ClientNote {
+    id           String    @id @default(cuid())
+    clientId     String
+    client       Client    @relation(fields: [clientId], references: [id])
+    userId       String
+    user         User      @relation(fields: [userId], references: [id])
+    type         String
+    content      String
+    nextStepDate DateTime?
+    createdAt    DateTime  @default(now())
+
+    @@map("client_notes")
+}
+
+model ClientType {
+    id      String   @id @default(cuid())
+    name    String
+    clients Client[]
+
+    @@map("client_types")
+}
+
+// ----------------------
+// Dolmetscher (Interpreters)
+// ----------------------
+
+model Interpreter {
+    id                String                     @id @default(cuid())
+    code              String                     @unique
+    codeNumber        Int                        @unique
+    firstName         String
+    lastName          String
+    email             String?
+    phone             String?
+    gender            String?
+    birthDate         DateTime?
+    address           String?
+    zip               String?
+    city              String?
+    offersRemote      Boolean
+    offersOnSite      Boolean
+    defaultHourlyRate Float?
+    availability      String?
+    iban              String?
+    startDate         DateTime?
+    endDate           DateTime?
+    interviewDate     DateTime?
+    googleContactId   String?
+    googleEventId     String?
+    statusId          String
+    status            InterpreterStatus          @relation(fields: [statusId], references: [id])
+    notes             String?
+    createdAt         DateTime                   @default(now())
+    updatedAt         DateTime                   @updatedAt
+    preferredCities   InterpreterPreferredCity[]
+    languages         InterpreterLanguage[]
+    jobs              Job[]
+
+    @@map("interpreters")
+}
+
+model InterpreterStatus {
+    id           String        @id @default(cuid())
+    name         String
+    interpreters Interpreter[]
+
+    @@map("interpreter_statuses")
+}
+
+model InterpreterPreferredCity {
+    id            String      @id @default(cuid())
     interpreterId String
-    orderId       String   @unique
-    amount        Decimal
-    payoutDate    DateTime
-    statusId      String
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
+    interpreter   Interpreter @relation(fields: [interpreterId], references: [id])
+    cityId        String
+    city          City        @relation(fields: [cityId], references: [id])
 
-    interpreter Interpreters   @relation(fields: [interpreterId], references: [id])
-    order       Orders         @relation(fields: [orderId], references: [id])
-    status      PayoutStatuses @relation(fields: [statusId], references: [id])
+    @@map("interpreter_preferred_cities")
 }
 
-model Languages {
-    id           String                 @id @default(uuid())
-    name         String
-    code         String
-    interpreters InterpreterLanguages[]
-    ordersSource Orders[]               @relation("OrderSourceLanguage")
-    ordersTarget Orders[]               @relation("OrderTargetLanguage")
+model InterpreterLanguage {
+    id            String      @id @default(cuid())
+    interpreterId String
+    interpreter   Interpreter @relation(fields: [interpreterId], references: [id])
+    languageId    String
+    language      Language    @relation(fields: [languageId], references: [id])
+
+    @@map("interpreter_languages")
 }
 
-model Cities {
-    id             String    @id @default(uuid())
-    name           String
-    clients        Clients[] @relation("ClientCity")
-    billingClients Clients[] @relation("ClientBillingCity")
-    orders         Orders[]
+// ----------------------
+// Aufträge (Jobs)
+// ----------------------
+
+model Job {
+    id               String         @id @default(cuid())
+    clientId         String
+    client           Client         @relation(fields: [clientId], references: [id])
+    interpreterId    String?
+    interpreter      Interpreter?   @relation(fields: [interpreterId], references: [id])
+    languageFromId   String
+    languageFrom     Language       @relation("JobFromLanguage", fields: [languageFromId], references: [id])
+    languageToId     String
+    languageTo       Language       @relation("JobToLanguage", fields: [languageToId], references: [id])
+    assignmentTypeId String
+    assignmentType   AssignmentType @relation(fields: [assignmentTypeId], references: [id])
+    jobTypeId        String
+    jobType          JobType        @relation(fields: [jobTypeId], references: [id])
+    priorityId       String
+    priority         JobPriority    @relation(fields: [priorityId], references: [id])
+    jobStatusId      String
+    status           JobStatus      @relation(fields: [jobStatusId], references: [id])
+    description      String?
+    date             DateTime
+    startTime        DateTime
+    endTime          DateTime
+    durationMinutes  Int
+    mode             String
+    street           String?
+    zip              String?
+    cityId           String
+    city             City           @relation(fields: [cityId], references: [id])
+    fee              Float?
+    interpreterFee   Float?
+    notes            String?
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+
+    @@map("jobs")
 }
 
-model ClientTypes {
-    id      String    @id @default(uuid())
-    name    String
-    clients Clients[]
-}
+model JobStatus {
+    id   String @id @default(cuid())
+    name String
+    jobs Job[]
 
-model OrderTypes {
-    id     String   @id @default(uuid())
-    name   String
-    orders Orders[]
-}
-
-model InterpreterStatuses {
-    id           String         @id @default(uuid())
-    name         String
-    interpreters Interpreters[]
-}
-
-model OrderStatuses {
-    id     String   @id @default(uuid())
-    name   String
-    orders Orders[]
-}
-
-model InvoiceStatuses {
-    id       String     @id @default(uuid())
-    name     String
-    invoices Invoices[]
-}
-
-model PayoutStatuses {
-    id      String    @id @default(uuid())
-    name    String
-    payouts Payouts[]
-}
-
-model Urgencies {
-    id     String   @id @default(uuid())
-    name   String
-    orders Orders[]
-}
-
-model CancelSources {
-    id     String   @id @default(uuid())
-    name   String
-    orders Orders[]
+    @@map("job_statuses")
 }
