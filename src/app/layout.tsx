@@ -1,8 +1,9 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import AppLayout from '@/components/layout/app-layout';
-import ThemeProviders from '@/components/providers/theme-provider';
+import ThemeProviders from '@/providers/theme-provider';
 import ClientOnly from '@/components/client-only';
+import ReactQueryProvider from '@/providers/react-query-provider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -30,9 +31,11 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} bg-amber-50 antialiased dark:bg-gray-950`}
             >
                 <ClientOnly>
-                    <ThemeProviders>
-                        <AppLayout>{children}</AppLayout>
-                    </ThemeProviders>
+                    <ReactQueryProvider>
+                        <ThemeProviders>
+                            <AppLayout>{children}</AppLayout>
+                        </ThemeProviders>
+                    </ReactQueryProvider>
                 </ClientOnly>
             </body>
         </html>
