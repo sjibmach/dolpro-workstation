@@ -8,13 +8,11 @@ import {
 import { prisma } from '@/lib/prisma';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { HiOutlineClipboard, HiPlus } from 'react-icons/hi2';
 import { ClientPersonalDataEditModal } from '@/components/modals/app-modals/client-personal-data-edit-modal';
 import { ClientAddressEditModal } from '@/components/modals/app-modals/client-address-edit-modal';
-import { PiFeather } from 'react-icons/pi';
-import { toast } from 'sonner';
 import CopyButton from '@/components/custom-ui/copy-button';
 import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
+import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
 
 export type paramsType = Promise<{ clientId: string }>;
 
@@ -44,9 +42,7 @@ async function ClientPage(props: { params: paramsType }) {
                     <NewCard>
                         <NewCardHeader className="flex items-center justify-between">
                             <span>Personaldaten</span>
-                            {/* <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-                                <PiFeather size={20} />
-                            </div> */}
+
                             <ClientPersonalDataEditModal client={client} />
                         </NewCardHeader>
                         <NewCardBody>
@@ -137,7 +133,6 @@ async function ClientPage(props: { params: paramsType }) {
                     <NewCard>
                         <NewCardHeader className="flex items-center justify-between">
                             <span>Ansprechpartner</span>
-
                             <ClientContactPersonAddModal clientId={clientId} />
                         </NewCardHeader>
                         <NewCardBody>
@@ -217,9 +212,9 @@ async function ClientPage(props: { params: paramsType }) {
                                                 </div>
                                             </div>
                                             <div className="flex flex-none items-center">
-                                                <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-                                                    <PiFeather size={20} />
-                                                </div>
+                                                <ClientContactPersonEditModal
+                                                    clientContactPerson={person}
+                                                />
                                             </div>
                                         </NewCardItem>
                                     );

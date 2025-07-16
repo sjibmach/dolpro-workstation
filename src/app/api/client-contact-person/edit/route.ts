@@ -1,13 +1,12 @@
-import { TClientAdd } from '@/components/modals/app-modals/client-add-modal';
-import { TClientContactPersonAdd } from '@/components/modals/app-modals/client-contact-person-add-modal';
+import { TClientContactPersonEdit } from '@/components/modals/app-modals/client-contact-person-edit-modal';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    const body: TClientContactPersonAdd = await req.json();
+    const body: TClientContactPersonEdit = await req.json();
 
     const {
-        clientId,
+        id,
         salutation,
         firstName,
         lastName,
@@ -18,25 +17,10 @@ export async function POST(req: Request) {
         cityId,
     } = body;
 
-    // Validate required fields
-    if (!clientId) {
-        return NextResponse.json(
-            { error: 'clientId ist erforderlich' },
-            { status: 400 }
-        );
-    }
-
-    if (!lastName) {
-        return NextResponse.json(
-            { error: 'Nachname ist erforderlich' },
-            { status: 400 }
-        );
-    }
-
     try {
-        const newClientContactPerson = await prisma.clientContactperson.create({
+        await prisma.clientContactperson.update({
+            where: { id },
             data: {
-                clientId,
                 salutation: salutation || null,
                 firstName: firstName || '',
                 lastName,
@@ -50,13 +34,12 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             message: 'success',
-            data: { id: newClientContactPerson.id },
         });
     } catch (error) {
         console.log(error);
 
         return NextResponse.json(
-            { error: 'Fehler beim Hinzufügen des Kontakts' },
+            { error: 'Fehler beim Aktualisieren des Kontakts' },
             { status: 400 }
         );
     }

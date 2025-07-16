@@ -11,11 +11,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import useClientPersonalDataEditModal from './modal-hooks/use-client-personal-data-edit-modal';
 import { PiFeather } from 'react-icons/pi';
 import { Client } from '@prisma/client';
+import { useState } from 'react';
 
-const clientSchema = z
+const ClientPersonDataEditSchema = z
     .object({
         id: z.string(),
         name: z.string().min(2, {
@@ -43,23 +43,23 @@ const clientSchema = z
     })
     .refine(
         data => {
-            // if clientTypeId is null, then return false
             if (!data.clientTypeId) return false;
             return true;
         },
         { path: ['clientTypeId'], message: 'Organisationsart ist erforderlich' }
     );
 
-export type TClientPersonalDataEdit = z.infer<typeof clientSchema>;
+export type TClientPersonalDataEdit = z.infer<
+    typeof ClientPersonDataEditSchema
+>;
 
 export function ClientPersonalDataEditModal({
     client,
 }: {
     client: Client | undefined;
 }) {
+    const [open, setOpen] = useState(false);
     const router = useRouter();
-
-    const { isOpen, onOpenChange, onClose } = useClientPersonalDataEditModal();
 
     const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
         queryKey: ['client-types'],
@@ -75,7 +75,7 @@ export function ClientPersonalDataEditModal({
         });
 
     const form = useForm<TClientPersonalDataEdit>({
-        resolver: zodResolver(clientSchema),
+        resolver: zodResolver(ClientPersonDataEditSchema),
         defaultValues: {
             id: client?.id || '',
             name: '',
@@ -109,7 +109,7 @@ export function ClientPersonalDataEditModal({
 
         try {
             await promise;
-            onClose();
+            setOpen(false);
         } catch (error) {
             console.error('Fehler beim Senden des Formulars:', error);
         } finally {
@@ -187,8 +187,11 @@ export function ClientPersonalDataEditModal({
             dialogAction={form.handleSubmit(onSubmit)}
             dialogClose={true}
             dialogActionLabel="Speichern"
-            open={isOpen}
-            onOpenChange={onOpenChange}
+            open={open}
+            onOpenChange={isOpen => {
+                setOpen(isOpen);
+                if (!isOpen) form.reset();
+            }}
         />
     );
 }

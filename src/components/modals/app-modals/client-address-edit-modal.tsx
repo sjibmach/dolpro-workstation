@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PiFeather } from 'react-icons/pi';
 import { Client } from '@prisma/client';
-import useClientAddressEditModal from './modal-hooks/use-client-address-edit-modal copy';
+import { useState } from 'react';
 
 const clientAddressEditSchema = z.object({
     id: z.string(),
@@ -29,9 +29,8 @@ export function ClientAddressEditModal({
 }: {
     client: Client | undefined;
 }) {
+    const [open, setOpen] = useState(false);
     const router = useRouter();
-
-    const { isOpen, onOpenChange, onClose } = useClientAddressEditModal();
 
     const { data: cities, isLoading: isLoadingCities } = useQuery({
         queryKey: ['cities'],
@@ -68,7 +67,7 @@ export function ClientAddressEditModal({
 
         try {
             await promise;
-            onClose();
+            setOpen(false);
         } catch (error) {
             console.error('Fehler beim Senden des Formulars:', error);
         } finally {
@@ -124,8 +123,11 @@ export function ClientAddressEditModal({
             dialogAction={form.handleSubmit(onSubmit)}
             dialogClose={true}
             dialogActionLabel="Speichern"
-            open={isOpen}
-            onOpenChange={onOpenChange}
+            open={open}
+            onOpenChange={isOpen => {
+                setOpen(isOpen);
+                if (!isOpen) form.reset();
+            }}
         />
     );
 }

@@ -10,11 +10,13 @@ import RHFCombobox from '@/components/rhf/rhf-combobox';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { HiPlus } from 'react-icons/hi2';
 import { useQuery } from '@tanstack/react-query';
+import { ClientContactperson } from '@prisma/client';
+import { PiFeather } from 'react-icons/pi';
 import { useState } from 'react';
 
-const ClientContactPeronAddSchema = z.object({
+const ClientContactPersonEditSchema = z.object({
+    id: z.string(),
     clientId: z.string(),
     salutation: z.string().nullable().optional(),
     firstName: z.string().nullable().optional(),
@@ -44,17 +46,17 @@ const ClientContactPeronAddSchema = z.object({
         ),
 });
 
-export type TClientContactPersonAdd = z.infer<
-    typeof ClientContactPeronAddSchema
+export type TClientContactPersonEdit = z.infer<
+    typeof ClientContactPersonEditSchema
 >;
 
-export function ClientContactPersonAddModal({
-    clientId,
+export function ClientContactPersonEditModal({
+    clientContactPerson,
 }: {
-    clientId: string;
+    clientContactPerson: ClientContactperson;
 }) {
-    const [open, setOpen] = useState(false);
     const router = useRouter();
+    const [open, setOpen] = useState(false);
 
     const { data: cities, isLoading: isLoadingCities } = useQuery({
         queryKey: ['cities'],
@@ -62,37 +64,30 @@ export function ClientContactPersonAddModal({
             fetch('/api/base-data/cities').then(res => res.json()),
     });
 
-    const form = useForm<TClientContactPersonAdd>({
-        resolver: zodResolver(ClientContactPeronAddSchema),
+    const form = useForm<TClientContactPersonEdit>({
+        resolver: zodResolver(ClientContactPersonEditSchema),
         defaultValues: {
-            clientId,
-            salutation: '',
-            firstName: '',
-            lastName: '',
-            street: '',
-            zip: '',
-            cityId: null,
-            phone: '',
-            email: '',
+            ...clientContactPerson,
         },
+        values: { ...clientContactPerson },
     });
 
-    const onSubmit = async (values: TClientContactPersonAdd) => {
+    const onSubmit = async (values: TClientContactPersonEdit) => {
         console.log('values', values);
 
-        const promise = axios.post('/api/client-contact-person/add', values);
+        const promise = axios.post('/api/client-contact-person/edit', values);
 
         toast.promise(promise, {
-            loading: 'Kontaktperson wird eingefügt...',
-            success: 'Kontaktperson erfolgreich eingefügt',
-            error: 'Fehler beim Einfügen der Kontaktperson',
+            loading: 'Kontaktperson wird aktualisiert...',
+            success: 'Kontaktperson erfolgreich aktualisiert',
+            error: 'Fehler beim Aktualisieren der Kontaktperson',
         });
 
         try {
             await promise;
             setOpen(false);
         } catch (error) {
-            console.error('Error adding contact person:', error);
+            console.error('Error updating contact person:', error);
         } finally {
             form.reset();
             router.refresh();
@@ -154,7 +149,6 @@ export function ClientContactPersonAddModal({
                         setValue={form.setValue}
                         creatable
                     />
-                    {/* <div className="mb-10" /> */}
                     <RHFInput
                         name="phone"
                         control={form.control}
@@ -178,7 +172,7 @@ export function ClientContactPersonAddModal({
 
     const trigger = (
         <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-            <HiPlus size={20} />
+            <PiFeather size={20} />
         </div>
     );
 
@@ -186,7 +180,7 @@ export function ClientContactPersonAddModal({
         <Modal
             trigger={trigger}
             size="md"
-            title="Kontaktperson hinzufügen"
+            title="Kontaktperson bearbeiten"
             body={body}
             dialogAction={form.handleSubmit(onSubmit)}
             dialogClose={true}

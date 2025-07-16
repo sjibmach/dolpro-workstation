@@ -12,8 +12,8 @@ import RHFCombobox from '@/components/rhf/rhf-combobox';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import useClientAddModal from './modal-hooks/use-client-add-modal';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 const clientAddSchema = z
     .object({
@@ -56,9 +56,8 @@ const clientAddSchema = z
 export type TClientAdd = z.infer<typeof clientAddSchema>;
 
 export function ClientAddModal() {
+    const [open, setOpen] = useState(false);
     const router = useRouter();
-
-    const { isOpen, onOpenChange, onClose } = useClientAddModal();
 
     const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
         queryKey: ['client-types'],
@@ -107,7 +106,7 @@ export function ClientAddModal() {
 
         try {
             await promise;
-            onClose();
+            setOpen(false);
         } catch (error) {
             console.error('Fehler beim Senden des Formulars:', error);
         } finally {
@@ -210,8 +209,11 @@ export function ClientAddModal() {
             dialogAction={form.handleSubmit(onSubmit)}
             dialogClose={true}
             dialogActionLabel="Hinzufügen"
-            open={isOpen}
-            onOpenChange={onOpenChange}
+            open={open}
+            onOpenChange={isOpen => {
+                setOpen(isOpen);
+                if (!isOpen) form.reset();
+            }}
         />
     );
 }
