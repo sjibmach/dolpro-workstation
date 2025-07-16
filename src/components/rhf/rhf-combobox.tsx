@@ -102,7 +102,7 @@ const RHFCombobox = ({
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="max-w-[300px] p-0">
+                        <PopoverContent className="max-h-[280px] max-w-[300px] overflow-y-auto p-0">
                             <Command
                                 onKeyDown={e => {
                                     if (

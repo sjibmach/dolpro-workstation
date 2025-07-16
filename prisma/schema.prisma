@@ -157,7 +157,7 @@ model ClientContactperson {
     salutation String?
     firstName  String?
     lastName   String
-    address    String?
+    street     String?
     zip        String?
     cityId     String?
     city       City?   @relation(fields: [cityId], references: [id])
@@ -181,7 +181,7 @@ model Interpreter {
     phone             String?
     gender            String?
     birthDate         DateTime?
-    address           String?
+    street            String?
     zip               String?
     city              String?
     offersRemote      Boolean
@@ -301,7 +301,7 @@ model JobContactperson {
     salutation String?
     firstName  String?
     lastName   String
-    address    String?
+    street     String?
     zip        String?
     cityId     String?
     city       City?   @relation(fields: [cityId], references: [id])

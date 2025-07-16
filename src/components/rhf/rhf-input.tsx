@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     FormControl,
     FormDescription,
@@ -27,7 +26,7 @@ const RHFInput = ({
     placeholder?: string;
     showError?: boolean;
     type?: string;
-}) => {
+} & React.ComponentProps<'input'>) => {
     return (
         <FormField
             control={control}

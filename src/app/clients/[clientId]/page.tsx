@@ -14,6 +14,7 @@ import { ClientAddressEditModal } from '@/components/modals/app-modals/client-ad
 import { PiFeather } from 'react-icons/pi';
 import { toast } from 'sonner';
 import CopyButton from '@/components/custom-ui/copy-button';
+import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
 
 export type paramsType = Promise<{ clientId: string }>;
 
@@ -136,16 +137,15 @@ async function ClientPage(props: { params: paramsType }) {
                     <NewCard>
                         <NewCardHeader className="flex items-center justify-between">
                             <span>Ansprechpartner</span>
-                            <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-                                <HiPlus size={20} />
-                            </div>
+
+                            <ClientContactPersonAddModal clientId={clientId} />
                         </NewCardHeader>
                         <NewCardBody>
-                            {client.contactPersons.length > 0 &&
+                            {client.contactPersons.length > 0 ? (
                                 client.contactPersons.map(person => {
                                     const fullName =
                                         `${person.firstName || ''} ${person.lastName || ''}`.trim();
-                                    const address = person.address;
+                                    const address = person.street;
                                     const zipAndCity =
                                         `${person.zip || ''} ${person.cityId || ''}`.trim();
 
@@ -153,6 +153,17 @@ async function ClientPage(props: { params: paramsType }) {
                                         <NewCardItem
                                             key={person.id}
                                             className="flex-gap-2 flex justify-between"
+                                            first={
+                                                person ===
+                                                client.contactPersons[0]
+                                            }
+                                            last={
+                                                person ===
+                                                client.contactPersons[
+                                                    client.contactPersons
+                                                        .length - 1
+                                                ]
+                                            }
                                         >
                                             <div className="flex-1">
                                                 <div className="text-xs text-gray-600 dark:text-gray-400">
@@ -212,22 +223,22 @@ async function ClientPage(props: { params: paramsType }) {
                                             </div>
                                         </NewCardItem>
                                     );
-                                })}
-                            <NewCardItem
-                                className="flex cursor-pointer items-center font-semibold text-gray-500"
-                                last
-                            >
-                                <span>Ansprechpartner hinzufügen</span>
-                                <HiPlus size={20} className="ml-2" />
-                            </NewCardItem>
+                                })
+                            ) : (
+                                <NewCardItem
+                                    className="flex items-center text-gray-500"
+                                    last
+                                    first
+                                >
+                                    Keine Ansprechpartner vorhanden.
+                                </NewCardItem>
+                            )}
                         </NewCardBody>
                     </NewCard>
                     <NewCard>
                         <NewCardHeader className="flex items-center justify-between">
                             <span>Anschrift</span>
-                            {/* <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-                                <PiFeather size={20} />
-                            </div> */}
+
                             <ClientAddressEditModal client={client} />
                         </NewCardHeader>
                         <NewCardBody>
@@ -274,9 +285,6 @@ async function ClientPage(props: { params: paramsType }) {
                     <NewCard>
                         <NewCardHeader className="flex items-center justify-between">
                             <span>Systemdaten</span>
-                            {/* <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
-                                <PiFeather size={20} />
-                            </div> */}
                         </NewCardHeader>
                         <NewCardBody>
                             <NewCardItem
