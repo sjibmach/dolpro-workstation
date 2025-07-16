@@ -1,5 +1,5 @@
 'use client';
-import Modal from '../modal';
+import Modal from '../ui/modal';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

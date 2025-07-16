@@ -4,6 +4,8 @@ import {
     NewCardContainer,
     NewCardHeader,
     NewCardItem,
+    NewCardItemAddButton,
+    NewCardItemAsButton,
 } from '@/components/custom-ui/new-card';
 import { prisma } from '@/lib/prisma';
 import { cn } from '@/lib/utils';
@@ -13,6 +15,7 @@ import { ClientAddressEditModal } from '@/components/modals/app-modals/client-ad
 import CopyButton from '@/components/custom-ui/copy-button';
 import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
 import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
+import { HiOutlineTrash } from 'react-icons/hi2';
 
 export type paramsType = Promise<{ clientId: string }>;
 
@@ -372,7 +375,20 @@ async function ClientPage(props: { params: paramsType }) {
                         </NewCardBody>
                     </NewCard>
                 </NewCardContainer>
+
                 <NewCardContainer className="md:col-span-2">
+                    <NewCard>
+                        <NewCardHeader title="Aktionen" />
+                        {/* <NewCardBody>
+                            <NewCardItemAsButton
+                                label="Familie Löschen"
+                                icon={HiOutlineTrash}
+                                // onClick={}
+                                first
+                                last
+                            />
+                        </NewCardBody> */}
+                    </NewCard>
                     <NewCard>
                         <NewCardHeader>Verlauf</NewCardHeader>
                         <NewCardBody>

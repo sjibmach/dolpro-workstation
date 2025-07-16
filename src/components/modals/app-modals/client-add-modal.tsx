@@ -1,5 +1,5 @@
 'use client';
-import Modal from '../modal';
+import Modal from '../ui/modal';
 import { Button } from '@/components/ui/button';
 import { HiPlus } from 'react-icons/hi2';
 

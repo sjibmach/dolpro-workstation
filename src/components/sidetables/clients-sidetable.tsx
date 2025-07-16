@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import {
     NewCard,
@@ -15,8 +15,18 @@ import { useState } from 'react';
 import { ClientAddModal } from '../modals/app-modals/client-add-modal';
 import { Badge } from '../ui/badge';
 import { Client } from '@prisma/client';
+import { HiOutlineDotsHorizontal } from 'react-icons/hi';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import ClientDeleteAlertModal from '../modals/app-alert-modals/client-delete-alert-modal';
 
 const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
+    const router = useRouter();
     const params = useParams();
     const clientId = params.clientId as string;
     const [searchQuery, setSearchQuery] = useState('');
@@ -56,11 +66,42 @@ const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
                                             : 'hover:bg-amber-50 dark:hover:bg-amber-700'
                                     )}
                                 >
-                                    <div className="flex flex-col justify-between">
-                                        <span className="text-sm font-medium">
-                                            {client.code ? client.code : ''}{' '}
-                                            {client.name}
-                                        </span>
+                                    <div className="flex w-full flex-col justify-between">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm">
+                                                {client.code ? client.code : ''}{' '}
+                                                {client.name}
+                                            </span>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger
+                                                    asChild
+                                                    className="flex-none cursor-pointer"
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        className="flex items-center justify-center p-1"
+                                                        aria-label="Mehr Aktionen"
+                                                    >
+                                                        <HiOutlineDotsHorizontal />
+                                                    </button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    className="w-56"
+                                                    align="start"
+                                                >
+                                                    <DropdownMenuItem
+                                                        onClick={e => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                        }}
+                                                    >
+                                                        <ClientDeleteAlertModal
+                                                            clientId={client.id}
+                                                        />
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                         {client.statusId && (
                                             <Badge
                                                 className="text-xs"

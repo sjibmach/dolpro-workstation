@@ -1,4 +1,3 @@
-import { TClientAdd } from '@/components/modals/app-modals/client-add-modal';
 import { TClientContactPersonAdd } from '@/components/modals/app-modals/client-contact-person-add-modal';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
