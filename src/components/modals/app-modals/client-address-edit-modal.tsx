@@ -7,13 +7,13 @@ import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import RHFInput from '@/components/rhf/rhf-input';
 import RHFCombobox from '@/components/rhf/rhf-combobox';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PiFeather } from 'react-icons/pi';
 import { Client } from '@prisma/client';
 import { useState } from 'react';
+import { useQueryCities } from '@/hooks/react-query/react-query-hooks';
 
 const clientAddressEditSchema = z.object({
     id: z.string(),
@@ -32,11 +32,7 @@ export function ClientAddressEditModal({
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
-    const { data: cities, isLoading: isLoadingCities } = useQuery({
-        queryKey: ['cities'],
-        queryFn: async () =>
-            fetch('/api/base-data/cities').then(res => res.json()),
-    });
+    const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const form = useForm<TClientAddressEdit>({
         resolver: zodResolver(clientAddressEditSchema),

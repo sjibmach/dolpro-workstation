@@ -10,10 +10,10 @@ import RHFCombobox from '@/components/rhf/rhf-combobox';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
 import { ClientContactperson } from '@prisma/client';
 import { PiFeather } from 'react-icons/pi';
 import { useState } from 'react';
+import { useQueryCities } from '@/hooks/react-query/react-query-hooks';
 
 const ClientContactPersonEditSchema = z.object({
     id: z.string(),
@@ -58,11 +58,7 @@ export function ClientContactPersonEditModal({
     const router = useRouter();
     const [open, setOpen] = useState(false);
 
-    const { data: cities, isLoading: isLoadingCities } = useQuery({
-        queryKey: ['cities'],
-        queryFn: async () =>
-            fetch('/api/base-data/cities').then(res => res.json()),
-    });
+    const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const form = useForm<TClientContactPersonEdit>({
         resolver: zodResolver(ClientContactPersonEditSchema),

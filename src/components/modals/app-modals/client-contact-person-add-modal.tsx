@@ -11,8 +11,8 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { HiPlus } from 'react-icons/hi2';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useQueryCities } from '@/hooks/react-query/react-query-hooks';
 
 const ClientContactPeronAddSchema = z.object({
     clientId: z.string(),
@@ -56,11 +56,7 @@ export function ClientContactPersonAddModal({
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
-    const { data: cities, isLoading: isLoadingCities } = useQuery({
-        queryKey: ['cities'],
-        queryFn: async () =>
-            fetch('/api/base-data/cities').then(res => res.json()),
-    });
+    const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const form = useForm<TClientContactPersonAdd>({
         resolver: zodResolver(ClientContactPeronAddSchema),

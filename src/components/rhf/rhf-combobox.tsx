@@ -36,7 +36,7 @@ const RHFCombobox = ({
     description,
     placeholder,
     showError = true,
-    options,
+    options = [],
     setValue,
     creatable = false,
 }: {
@@ -46,7 +46,7 @@ const RHFCombobox = ({
     description?: string;
     placeholder?: string;
     showError?: boolean;
-    options: { id: string; name: string }[];
+    options: { id: string; name: string }[] | undefined;
     setValue: UseFormSetValue<any>;
     creatable?: boolean;
 }) => {

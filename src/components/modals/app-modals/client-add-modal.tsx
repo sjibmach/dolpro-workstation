@@ -9,11 +9,15 @@ import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import RHFInput from '@/components/rhf/rhf-input';
 import RHFCombobox from '@/components/rhf/rhf-combobox';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import {
+    useQueryCities,
+    useQueryClientStatuses,
+    useQueryClientTypes,
+} from '@/hooks/react-query/react-query-hooks';
 
 const clientAddSchema = z
     .object({
@@ -59,24 +63,13 @@ export function ClientAddModal() {
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
-    const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
-        queryKey: ['client-types'],
-        queryFn: async () =>
-            fetch('/api/base-data/client-types').then(res => res.json()),
-    });
+    const { data: clientTypes, isLoading: isLoadingClientTypes } =
+        useQueryClientTypes();
 
     const { data: clientStatuses, isLoading: isLoadingClientStatuses } =
-        useQuery({
-            queryKey: ['client-statuses'],
-            queryFn: async () =>
-                fetch('/api/base-data/client-statuses').then(res => res.json()),
-        });
+        useQueryClientStatuses();
 
-    const { data: cities, isLoading: isLoadingCities } = useQuery({
-        queryKey: ['cities'],
-        queryFn: async () =>
-            fetch('/api/base-data/cities').then(res => res.json()),
-    });
+    const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const form = useForm<TClientAdd>({
         resolver: zodResolver(clientAddSchema),

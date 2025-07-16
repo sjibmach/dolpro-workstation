@@ -7,13 +7,16 @@ import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import RHFInput from '@/components/rhf/rhf-input';
 import RHFCombobox from '@/components/rhf/rhf-combobox';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PiFeather } from 'react-icons/pi';
 import { Client } from '@prisma/client';
 import { useState } from 'react';
+import {
+    useQueryClientStatuses,
+    useQueryClientTypes,
+} from '@/hooks/react-query/react-query-hooks';
 
 const ClientPersonDataEditSchema = z
     .object({
@@ -61,18 +64,11 @@ export function ClientPersonalDataEditModal({
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
-    const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
-        queryKey: ['client-types'],
-        queryFn: async () =>
-            fetch('/api/base-data/client-types').then(res => res.json()),
-    });
+    const { data: clientTypes, isLoading: isLoadingClientTypes } =
+        useQueryClientTypes();
 
     const { data: clientStatuses, isLoading: isLoadingClientStatuses } =
-        useQuery({
-            queryKey: ['client-statuses'],
-            queryFn: async () =>
-                fetch('/api/base-data/client-statuses').then(res => res.json()),
-        });
+        useQueryClientStatuses();
 
     const form = useForm<TClientPersonalDataEdit>({
         resolver: zodResolver(ClientPersonDataEditSchema),
