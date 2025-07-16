@@ -58,6 +58,7 @@ const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
                                 >
                                     <div className="flex flex-col justify-between">
                                         <span className="text-sm font-medium">
+                                            {client.code ? client.code : ''}{' '}
                                             {client.name}
                                         </span>
                                         {client.statusId && (

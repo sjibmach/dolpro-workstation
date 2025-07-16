@@ -12,6 +12,13 @@ import {
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
+const SIZE_CLASSES = {
+    sm: 'sm:max-w-[425px]',
+    md: 'sm:max-w-[650px]',
+    lg: 'sm:max-w-[800px]',
+    xl: 'sm:max-w-[1000px]',
+};
+
 const Modal = ({
     trigger = <Button variant="outline">Öffnen</Button>,
     title,
@@ -41,15 +48,7 @@ const Modal = ({
             <DialogContent
                 className={cn(
                     'max-h-[90vh] overflow-y-auto',
-                    size === 'sm'
-                        ? 'sm:max-w-[425px]'
-                        : size === 'md'
-                          ? 'sm:max-w-[600px]'
-                          : size === 'lg'
-                            ? 'sm:max-w-[800px]'
-                            : size === 'xl'
-                              ? 'sm:max-w-[1000px]'
-                              : 'sm:max-w-[425px]'
+                    SIZE_CLASSES[size] || SIZE_CLASSES.sm
                 )}
             >
                 <DialogHeader>

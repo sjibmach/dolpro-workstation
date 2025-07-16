@@ -1,7 +1,5 @@
 'use client';
 import Modal from '../modal';
-import { Button } from '@/components/ui/button';
-import { HiPlus } from 'react-icons/hi2';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -12,11 +10,14 @@ import RHFCombobox from '@/components/rhf/rhf-combobox';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import useClientAddModal from './modal-hooks/use-client-add-modal';
 import { toast } from 'sonner';
+import useClientPersonalDataEditModal from './modal-hooks/use-client-personal-data-edit-modal';
+import { PiFeather } from 'react-icons/pi';
+import { Client } from '@prisma/client';
 
-const clientAddSchema = z
+const clientSchema = z
     .object({
+        id: z.string(),
         name: z.string().min(2, {
             message: 'Name muss mindestens 2 Zeichen lang sein.',
         }),
@@ -39,10 +40,6 @@ const clientAddSchema = z
                 },
                 { message: 'Bitte gültige E-Mail eingeben' }
             ),
-
-        street: z.string().nullable().optional(),
-        zip: z.string().nullable().optional(),
-        cityId: z.string().nullable().optional(),
     })
     .refine(
         data => {
@@ -53,12 +50,16 @@ const clientAddSchema = z
         { path: ['clientTypeId'], message: 'Organisationsart ist erforderlich' }
     );
 
-export type TClientAdd = z.infer<typeof clientAddSchema>;
+export type TClientPersonalDataEdit = z.infer<typeof clientSchema>;
 
-export function ClientAddModal() {
+export function ClientPersonalDataEditModal({
+    client,
+}: {
+    client: Client | undefined;
+}) {
     const router = useRouter();
 
-    const { isOpen, onOpenChange, onClose } = useClientAddModal();
+    const { isOpen, onOpenChange, onClose } = useClientPersonalDataEditModal();
 
     const { data: clientTypes, isLoading: isLoadingClientTypes } = useQuery({
         queryKey: ['client-types'],
@@ -73,36 +74,37 @@ export function ClientAddModal() {
                 fetch('/api/base-data/client-statuses').then(res => res.json()),
         });
 
-    const { data: cities, isLoading: isLoadingCities } = useQuery({
-        queryKey: ['cities'],
-        queryFn: async () =>
-            fetch('/api/base-data/cities').then(res => res.json()),
-    });
-
-    const form = useForm<TClientAdd>({
-        resolver: zodResolver(clientAddSchema),
+    const form = useForm<TClientPersonalDataEdit>({
+        resolver: zodResolver(clientSchema),
         defaultValues: {
+            id: client?.id || '',
             name: '',
             nameShortcut: '',
             statusId: 'new',
             clientTypeId: null,
             email: '',
             phone: '',
-            street: '',
-            zip: '',
-            cityId: null,
+        },
+        values: {
+            id: client?.id || '',
+            name: client?.name || '',
+            nameShortcut: client?.nameShortcut || '',
+            statusId: client?.statusId || 'new',
+            clientTypeId: client?.typeId || null,
+            email: client?.email || '',
+            phone: client?.phone || '',
         },
     });
 
-    const onSubmit = async (values: TClientAdd) => {
+    const onSubmit = async (values: TClientPersonalDataEdit) => {
         console.log('values', values);
 
-        const promise = axios.post('/api/client/add', values);
+        const promise = axios.post('/api/client/edit/personal-data', values);
 
         toast.promise(promise, {
-            loading: 'Kunde wird hinzugefügt...',
-            success: 'Kunde erfolgreich hinzugefügt',
-            error: 'Fehler beim Hinzufügen des Kunden',
+            loading: 'Auftragsgeber wird aktualisiert...',
+            success: 'Auftragsgeber erfolgreich aktualisiert',
+            error: 'Fehler beim Aktualisieren des Auftragsgebers',
         });
 
         try {
@@ -145,10 +147,9 @@ export function ClientAddModal() {
                     <RHFCombobox
                         name="statusId"
                         control={form.control}
-                        label="Status"
+                        label="Status *"
                         options={clientStatuses || []}
                         setValue={form.setValue}
-                        creatable
                     />
                     <RHFInput
                         name="email"
@@ -166,50 +167,26 @@ export function ClientAddModal() {
                         type="tel"
                         showError
                     />
-                    <RHFInput
-                        name="street"
-                        control={form.control}
-                        label="Straße"
-                        placeholder="Straße"
-                        showError
-                    />
-                    <RHFInput
-                        name="zip"
-                        control={form.control}
-                        label="PLZ"
-                        placeholder="Postleitzahl"
-                        showError
-                    />
-                    <RHFCombobox
-                        name="cityId"
-                        control={form.control}
-                        label="Ort"
-                        options={cities || []}
-                        setValue={form.setValue}
-                        creatable
-                        placeholder="Ort"
-                    />
                 </div>
             </form>
         </Form>
     );
 
     const trigger = (
-        <Button size="sm" variant="outline">
-            <HiPlus />
-            Neu
-        </Button>
+        <div className="cursor-pointer rounded-lg p-2 hover:bg-orange-200 dark:hover:bg-orange-700">
+            <PiFeather size={20} />
+        </div>
     );
 
     return (
         <Modal
             trigger={trigger}
             size="md"
-            title="Auftragsgeber hinzufügen"
+            title="Personaldaten Auftragsgebers bearbeiten"
             body={body}
             dialogAction={form.handleSubmit(onSubmit)}
             dialogClose={true}
-            dialogActionLabel="Hinzufügen"
+            dialogActionLabel="Speichern"
             open={isOpen}
             onOpenChange={onOpenChange}
         />

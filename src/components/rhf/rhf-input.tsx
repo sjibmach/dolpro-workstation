@@ -18,6 +18,7 @@ const RHFInput = ({
     description,
     placeholder,
     showError = true,
+    type,
 }: {
     control: Control<any>;
     name: string;
@@ -25,6 +26,7 @@ const RHFInput = ({
     description?: string;
     placeholder?: string;
     showError?: boolean;
+    type?: string;
 }) => {
     return (
         <FormField
@@ -34,7 +36,11 @@ const RHFInput = ({
                 <FormItem>
                     {label && <FormLabel>{label}</FormLabel>}
                     <FormControl>
-                        <Input placeholder={placeholder} {...field} />
+                        <Input
+                            placeholder={placeholder}
+                            {...field}
+                            type={type}
+                        />
                     </FormControl>
                     {description && (
                         <FormDescription>{description}</FormDescription>

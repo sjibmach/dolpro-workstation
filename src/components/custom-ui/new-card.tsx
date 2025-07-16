@@ -35,7 +35,7 @@ const NewCardHeader = React.forwardRef<
 >(({ title, className, children, ...props }, ref) => (
     <div
         ref={ref}
-        className={cn('mb-1.5 text-base font-bold', className)}
+        className={cn('mb-1.5 text-base font-semibold', className)}
         {...props}
     >
         {title}

@@ -69,7 +69,7 @@ const RHFCombobox = ({
     );
 
     const handleCreate = () => {
-        const newOption = { id: query, name: query };
+        const newOption = { id: 'new_' + query, name: query };
         setLocalOptions(prev => [...prev, newOption]);
         setValue(name, newOption.id);
         setOpen(false);
@@ -89,7 +89,7 @@ const RHFCombobox = ({
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        'max-w-[300px] justify-between',
+                                        'max-w-[300px] justify-between font-normal',
                                         !field.value && 'text-muted-foreground'
                                     )}
                                 >
