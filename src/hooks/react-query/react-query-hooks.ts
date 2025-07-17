@@ -1,3 +1,4 @@
+import { TIdAndNameObject } from '@/lib/types';
 import {
     City,
     ClientStatus,
@@ -62,5 +63,15 @@ export const useQueryLanguages = () => {
         queryKey: ['languages'],
         queryFn: async () =>
             fetch('/api/base-data/languages').then(res => res.json()),
+    });
+};
+
+export const useQueryClientsForAddingJobs = () => {
+    return useQuery<TIdAndNameObject[]>({
+        queryKey: ['clients-for-adding-jobs'],
+        queryFn: async () =>
+            fetch('/api/base-data/clients-for-adding-jobs').then(res =>
+                res.json()
+            ),
     });
 };

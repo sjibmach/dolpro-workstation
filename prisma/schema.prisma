@@ -254,14 +254,14 @@ model Job {
     languageTo            Language           @relation("JobToLanguage", fields: [languageToId], references: [id])
     jobTypeId             String?
     jobType               JobType?           @relation(fields: [jobTypeId], references: [id])
-    priorityId            String             @default("medium")
-    priority              JobPriority        @relation(fields: [priorityId], references: [id])
+    priorityId            String?            @default("medium")
+    priority              JobPriority?       @relation(fields: [priorityId], references: [id])
     statusId              String
     status                JobStatus          @relation(fields: [statusId], references: [id])
     description           String?
     jobDate               DateTime?
-    startTime             DateTime?
-    endTime               DateTime?
+    startTime             String?
+    endTime               String?
     durationMinutes       Int?
     mode                  String?
     addressStreet         String?
@@ -283,7 +283,7 @@ model Job {
     finalPriceInterpreter Float?
     invoiceAddress        String?
     notes                 String?
-    creatorId             String
+    creatorId             String?
     updatorId             String?
     createdAt             DateTime           @default(now())
     updatedAt             DateTime           @updatedAt

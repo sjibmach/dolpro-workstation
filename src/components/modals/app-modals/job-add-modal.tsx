@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
     useQueryCities,
+    useQueryClientsForAddingJobs,
     useQueryJobPriorities,
     useQueryJobStatuses,
     useQueryJobTypes,
@@ -22,12 +23,15 @@ import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 import { RHFRadioGroup } from '@/components/rhf/rhf-radio-group';
 import RHFInput from '@/components/rhf/rhf-input';
 import { format } from 'date-fns';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 const JobAddSchema = z.object({
-    clientId: z.string(),
-    languageToId: z.string(),
-    jobTypeId: z.string(),
+    clientId: z.string().min(1, 'Auftraggeber ist erforderlich'),
+    statusId: z.string(),
+    languageToId: z.string().min(1, 'Zielsprache ist erforderlich'),
     priorityId: z.string().nullable().optional(),
+    jobTypeId: z.string().nullable().optional(),
     description: z.string().nullable().optional(),
     jobDate: z.string().nullable().optional(),
     startTime: z.string().nullable().optional(),
@@ -62,6 +66,9 @@ export function JobAddModal() {
         useQueryLanguages();
     const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
+    const { data: clients, isLoading: isLoadingClients } =
+        useQueryClientsForAddingJobs();
+
     const form = useForm<TJobAdd>({
         resolver: zodResolver(JobAddSchema),
         defaultValues: {
@@ -69,6 +76,7 @@ export function JobAddModal() {
             languageToId: '',
             jobTypeId: '',
             priorityId: 'medium',
+            statusId: 'openFindInterpreter',
             description: '',
             jobDate: '',
             startTime: '',
@@ -80,7 +88,7 @@ export function JobAddModal() {
             addressStreet: '',
             addressZip: '',
             addressCityId: '',
-            entryDate: format(new Date(), 'yyyy-mm-dd'),
+            entryDate: format(new Date(), 'yyyy-MM-dd'),
             kmRateClient: 0,
             kmRateInterpreter: 0,
             rhythm: '',
@@ -94,23 +102,23 @@ export function JobAddModal() {
     const onSubmit = async (values: TJobAdd) => {
         console.log('values', values);
 
-        // const promise = axios.post('/api/job/add', values);
+        const promise = axios.post('/api/job/add', values);
 
-        // toast.promise(promise, {
-        //     loading: 'Kunde wird hinzugefügt...',
-        //     success: 'Kunde erfolgreich hinzugefügt',
-        //     error: 'Fehler beim Hinzufügen des Kunden',
-        // });
+        toast.promise(promise, {
+            loading: 'Auftrag wird hinzugefügt...',
+            success: 'Auftrag erfolgreich hinzugefügt',
+            error: 'Fehler beim Hinzufügen des Auftrags',
+        });
 
-        // try {
-        //     await promise;
-        //     setOpen(false);
-        // } catch (error) {
-        //     console.error('Fehler beim Senden des Formulars:', error);
-        // } finally {
-        //     form.reset();
-        //     router.refresh();
-        // }
+        try {
+            await promise;
+            setOpen(false);
+        } catch (error) {
+            console.error('Fehler beim Senden des Formulars:', error);
+        } finally {
+            form.reset();
+            router.refresh();
+        }
     };
 
     const body = (
@@ -133,10 +141,7 @@ export function JobAddModal() {
                         <RHFCombobox
                             name="clientId"
                             label="Auftraggeber wählen"
-                            options={[
-                                { id: 'client1', name: 'Muster Jugendamt' },
-                                { id: 'client2', name: 'Beispiel Schule' },
-                            ]}
+                            options={clients}
                             placeholder="Auftraggeber auswählen"
                             control={form.control}
                             setValue={form.setValue}
