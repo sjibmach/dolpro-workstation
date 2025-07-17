@@ -11,7 +11,6 @@ import {
 
 import {
     Command,
-    CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
@@ -97,12 +96,12 @@ const RHFCombobox = ({
                                         ? localOptions.find(
                                               opt => opt.id === field.value
                                           )?.name
-                                        : 'Auswählen'}
+                                        : placeholder || 'Auswählen'}
                                     <ChevronsUpDown className="opacity-50" />
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="max-h-[280px] max-w-[300px] overflow-y-auto p-0">
+                        <PopoverContent className="max-w-[300px] overflow-y-auto p-0">
                             <Command
                                 onKeyDown={e => {
                                     if (

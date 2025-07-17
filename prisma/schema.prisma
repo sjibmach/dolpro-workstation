@@ -48,6 +48,12 @@ model JobType {
     @@map("job_types")
 }
 
+enum JobPriorityId {
+    high
+    medium
+    low
+}
+
 model JobPriority {
     id        String  @id @default(cuid())
     name      String
@@ -246,27 +252,27 @@ model Job {
     interpreter           Interpreter?       @relation(fields: [interpreterId], references: [id])
     languageToId          String
     languageTo            Language           @relation("JobToLanguage", fields: [languageToId], references: [id])
-    jobTypeId             String
-    jobType               JobType            @relation(fields: [jobTypeId], references: [id])
-    priorityId            String
+    jobTypeId             String?
+    jobType               JobType?           @relation(fields: [jobTypeId], references: [id])
+    priorityId            String             @default("medium")
     priority              JobPriority        @relation(fields: [priorityId], references: [id])
     statusId              String
     status                JobStatus          @relation(fields: [statusId], references: [id])
     description           String?
-    jobDate               DateTime
-    startTime             DateTime
-    endTime               DateTime
-    durationMinutes       Int
-    mode                  String
+    jobDate               DateTime?
+    startTime             DateTime?
+    endTime               DateTime?
+    durationMinutes       Int?
+    mode                  String?
     addressStreet         String?
     addressZip            String?
-    addressCityId         String
-    addressCity           City               @relation(fields: [addressCityId], references: [id])
+    addressCityId         String?
+    addressCity           City?              @relation(fields: [addressCityId], references: [id])
     fee                   Float?
     interpreterFee        Float?
     code                  String
     codeNumber            Int
-    entryDate             DateTime
+    entryDate             DateTime?
     distanceKm            Int?
     kmRateClient          Float?
     kmRateInterpreter     Float?

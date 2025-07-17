@@ -1,4 +1,13 @@
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Control, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
+    Form,
     FormControl,
     FormDescription,
     FormField,
@@ -6,19 +15,15 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
 
-import { Control } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
-
-const RHFInput = ({
+export function RHFTextArea({
     control,
     name,
     label,
     description,
     placeholder,
     showError = true,
-    type,
-    ...props
 }: {
     control: Control<any>;
     name: string;
@@ -26,8 +31,7 @@ const RHFInput = ({
     description?: string;
     placeholder?: string;
     showError?: boolean;
-    type?: string;
-} & React.ComponentProps<'input'>) => {
+}) {
     return (
         <FormField
             control={control}
@@ -36,21 +40,10 @@ const RHFInput = ({
                 <FormItem>
                     {label && <FormLabel>{label}</FormLabel>}
                     <FormControl>
-                        <Input
-                            placeholder={placeholder}
+                        <Textarea
+                            placeholder={placeholder || 'Hier eingeben...'}
+                            className="resize-none"
                             {...field}
-                            type={type}
-                            {...props}
-                            onChange={e => {
-                                const value = e.target.value;
-                                const parsedValue =
-                                    type === 'number'
-                                        ? value === ''
-                                            ? undefined
-                                            : Number(value)
-                                        : value;
-                                field.onChange(parsedValue);
-                            }}
                         />
                     </FormControl>
                     {description && (
@@ -61,6 +54,4 @@ const RHFInput = ({
             )}
         />
     );
-};
-
-export default RHFInput;
+}
