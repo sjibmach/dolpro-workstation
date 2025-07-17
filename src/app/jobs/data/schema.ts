@@ -24,8 +24,8 @@ export const jobTableSchema = z.object({
     statusName: z.string().nullable(),
     languageToId: z.string(),
     languageToName: z.string().nullable(),
-    priorityId: z.string(),
-    priorityName: z.string().nullable(),
+    priorityId: z.string().nullable().optional(),
+    priorityName: z.string().nullable().optional(),
 });
 
 export type TJobTable = z.infer<typeof jobTableSchema>;

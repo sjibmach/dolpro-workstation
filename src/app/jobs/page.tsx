@@ -45,7 +45,7 @@ export default async function TaskPage() {
         languageToId: job.languageToId,
         languageToName: job.languageTo?.name || null,
         priorityId: job.priorityId,
-        priorityName: job.priority?.name || null,
+        priorityName: job.priority?.name,
     }));
 
     return (
