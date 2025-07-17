@@ -140,7 +140,6 @@ export function ClientAddModal() {
                         label="Status"
                         options={clientStatuses || []}
                         setValue={form.setValue}
-                        creatable
                     />
                     <RHFInput
                         name="email"

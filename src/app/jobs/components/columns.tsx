@@ -82,7 +82,7 @@ export const columns: ColumnDef<TJobTable>[] = [
         cell: ({ row }) => {
             return (
                 <div className="w-44">
-                    <Badge>{row.original.statusName}</Badge>
+                    <Badge variant="secondary">{row.original.statusName}</Badge>
                 </div>
             );
         },
