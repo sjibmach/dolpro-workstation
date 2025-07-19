@@ -4,8 +4,6 @@ import {
     NewCardContainer,
     NewCardHeader,
     NewCardItem,
-    NewCardItemAddButton,
-    NewCardItemAsButton,
 } from '@/components/custom-ui/new-card';
 import { prisma } from '@/lib/prisma';
 import { cn } from '@/lib/utils';
@@ -15,16 +13,26 @@ import { ClientAddressEditModal } from '@/components/modals/app-modals/client-ad
 import CopyButton from '@/components/custom-ui/copy-button';
 import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
 import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
-import { HiOutlineTrash } from 'react-icons/hi2';
+import { TClientFullOverview } from '@/lib/types';
 
 export type paramsType = Promise<{ clientId: string }>;
 
 async function ClientPage(props: { params: paramsType }) {
     const { clientId } = await props.params;
 
-    const client = await prisma.client.findUnique({
+    const client: TClientFullOverview | null = await prisma.client.findUnique({
         where: { id: clientId },
-        include: { contactPersons: true },
+        include: {
+            contactPersons: {
+                include: {
+                    city: true,
+                },
+            },
+            status: true,
+            type: true,
+            statusReason: true,
+            city: true,
+        },
     });
 
     if (!client) {
@@ -115,7 +123,7 @@ async function ClientPage(props: { params: paramsType }) {
                                             !client?.typeId && 'text-gray-400'
                                         )}
                                     >
-                                        {client?.typeId || 'N/A'}
+                                        {client?.type?.name || 'N/A'}
                                     </div>
                                 </div>
                                 <div className="flex-1">
@@ -127,7 +135,7 @@ async function ClientPage(props: { params: paramsType }) {
                                             !client?.statusId && 'text-gray-400'
                                         )}
                                     >
-                                        {client?.statusId || 'N/A'}
+                                        {client?.status?.name || 'N/A'}
                                     </div>
                                 </div>
                             </NewCardItem>
@@ -139,13 +147,14 @@ async function ClientPage(props: { params: paramsType }) {
                             <ClientContactPersonAddModal clientId={clientId} />
                         </NewCardHeader>
                         <NewCardBody>
-                            {client.contactPersons.length > 0 ? (
+                            {client.contactPersons &&
+                            client.contactPersons.length > 0 ? (
                                 client.contactPersons.map(person => {
                                     const fullName =
                                         `${person.firstName || ''} ${person.lastName || ''}`.trim();
                                     const address = person.street;
                                     const zipAndCity =
-                                        `${person.zip || ''} ${person.cityId || ''}`.trim();
+                                        `${person.zip || ''} ${person.city?.name || ''}`.trim();
 
                                     return (
                                         <NewCardItem
@@ -153,11 +162,11 @@ async function ClientPage(props: { params: paramsType }) {
                                             className="flex-gap-2 flex justify-between"
                                             first={
                                                 person ===
-                                                client.contactPersons[0]
+                                                client.contactPersons?.[0]
                                             }
                                             last={
                                                 person ===
-                                                client.contactPersons[
+                                                client.contactPersons?.[
                                                     client.contactPersons
                                                         .length - 1
                                                 ]
@@ -275,7 +284,7 @@ async function ClientPage(props: { params: paramsType }) {
                                         !client?.cityId && 'text-gray-400'
                                     )}
                                 >
-                                    {client?.cityId || 'N/A'}
+                                    {client?.city?.name || 'N/A'}
                                 </div>
                             </NewCardItem>
                         </NewCardBody>
@@ -377,18 +386,6 @@ async function ClientPage(props: { params: paramsType }) {
                 </NewCardContainer>
 
                 <NewCardContainer className="md:col-span-2">
-                    <NewCard>
-                        <NewCardHeader title="Aktionen" />
-                        {/* <NewCardBody>
-                            <NewCardItemAsButton
-                                label="Familie Löschen"
-                                icon={HiOutlineTrash}
-                                // onClick={}
-                                first
-                                last
-                            />
-                        </NewCardBody> */}
-                    </NewCard>
                     <NewCard>
                         <NewCardHeader>Verlauf</NewCardHeader>
                         <NewCardBody>

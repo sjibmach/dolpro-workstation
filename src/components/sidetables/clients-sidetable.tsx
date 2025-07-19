@@ -24,8 +24,13 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import ClientDeleteAlertModal from '../modals/app-alert-modals/client-delete-alert-modal';
+import { TClientWithStatus } from '@/lib/types';
 
-const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
+const ClientsSidetable = ({
+    clients,
+}: {
+    clients: TClientWithStatus[] | undefined;
+}) => {
     const router = useRouter();
     const params = useParams();
     const clientId = params.clientId as string;
@@ -107,7 +112,7 @@ const ClientsSidetable = ({ clients }: { clients: Client[] | undefined }) => {
                                                 className="text-xs"
                                                 variant="secondary"
                                             >
-                                                {client.statusId}
+                                                {client?.status?.name}
                                             </Badge>
                                         )}
                                     </div>
