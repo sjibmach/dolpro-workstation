@@ -13,7 +13,7 @@ import { ClientAddressEditModal } from '@/components/modals/app-modals/client-ad
 import CopyButton from '@/components/custom-ui/copy-button';
 import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
 import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
-import { TClientFullOverview } from '@/lib/types';
+import { TClientFullOverview } from '@/lib/prismaTypes';
 
 export type paramsType = Promise<{ clientId: string }>;
 

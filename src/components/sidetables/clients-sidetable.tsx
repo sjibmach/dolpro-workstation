@@ -14,7 +14,6 @@ import { useState } from 'react';
 
 import { ClientAddModal } from '../modals/app-modals/client-add-modal';
 import { Badge } from '../ui/badge';
-import { Client } from '@prisma/client';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 import {
@@ -24,7 +23,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import ClientDeleteAlertModal from '../modals/app-alert-modals/client-delete-alert-modal';
-import { TClientWithStatus } from '@/lib/types';
+import { TClientWithStatus } from '@/lib/prismaTypes';
 
 const ClientsSidetable = ({
     clients,
