@@ -106,6 +106,7 @@ model Client {
     updatedAt          DateTime              @updatedAt
     jobs               Job[]
     contactPersons     ClientContactperson[]
+    ClientHistory      ClientHistory[]
 
     @@map("clients")
 }
@@ -127,11 +128,12 @@ enum ClientStatusId {
 }
 
 model ClientStatus {
-    id        String   @id @default(cuid())
-    name      String
-    sortIndex Int?
-    active    Boolean  @default(true)
-    clients   Client[]
+    id            String          @id @default(cuid())
+    name          String
+    sortIndex     Int?
+    active        Boolean         @default(true)
+    clients       Client[]
+    ClientHistory ClientHistory[]
 
     @@map("client_statuses")
 }
@@ -171,6 +173,33 @@ model ClientContactperson {
     email      String?
 
     @@map("client_contactpersons")
+}
+
+enum ClientHistoryType {
+    note
+    statusChange
+    fieldChange
+}
+
+model ClientHistory {
+    id       String @id @default(cuid())
+    clientId String
+    client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+    type      ClientHistoryType
+    fieldName String? // bei fieldChange
+    oldValue  String? // bei fieldChange
+    newValue  String? // bei fieldChange
+    statusId  String? // bei statusChange
+    status    ClientStatus?     @relation(fields: [statusId], references: [id])
+    note      String? // bei type = note
+
+    creatorId String
+    updatorId String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("client_histories")
 }
 
 // ----------------------
