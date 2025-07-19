@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 import {
     NewCard,
@@ -8,7 +8,6 @@ import {
     NewCardHeader,
     NewCardItem,
 } from '@/components/custom-ui/new-card';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
@@ -24,13 +23,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import ClientDeleteAlertModal from '../modals/app-alert-modals/client-delete-alert-modal';
 import { TClientWithStatus } from '@/lib/prismaTypes';
+import { cn } from '@/lib/utils';
 
 const ClientsSidetable = ({
     clients,
 }: {
     clients: TClientWithStatus[] | undefined;
 }) => {
-    const router = useRouter();
     const params = useParams();
     const clientId = params.clientId as string;
     const [searchQuery, setSearchQuery] = useState('');
