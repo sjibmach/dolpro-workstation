@@ -2,6 +2,7 @@ import { TIdAndNameObject } from '@/lib/types';
 import {
     City,
     ClientStatus,
+    ClientStatusReason,
     ClientType,
     JobPriority,
     JobStatus,
@@ -63,6 +64,16 @@ export const useQueryLanguages = () => {
         queryKey: ['languages'],
         queryFn: async () =>
             fetch('/api/base-data/languages').then(res => res.json()),
+    });
+};
+
+export const useQueryClientStatusReasons = () => {
+    return useQuery<ClientStatusReason[]>({
+        queryKey: ['client-status-reasons'],
+        queryFn: async () =>
+            fetch('/api/base-data/client-status-reasons').then(res =>
+                res.json()
+            ),
     });
 };
 

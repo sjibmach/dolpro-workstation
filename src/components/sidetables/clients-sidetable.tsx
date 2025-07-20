@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
-import { ClientAddModal } from '../modals/app-modals/client-add-modal';
 import { Badge } from '../ui/badge';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
@@ -24,6 +23,7 @@ import {
 import ClientDeleteAlertModal from '../modals/app-alert-modals/client-delete-alert-modal';
 import { TClientWithStatus } from '@/lib/prismaTypes';
 import { cn } from '@/lib/utils';
+import { ClientAddModal } from '@/components/modals/app-modals/client-add-modal';
 
 const ClientsSidetable = ({
     clients,

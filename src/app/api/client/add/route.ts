@@ -1,9 +1,9 @@
-import { TClientAdd } from '@/components/modals/app-modals/client-add-modal';
+import { TClientHistroy } from '@/components/modals/app-modals/client-add-modal';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    const body: TClientAdd = await req.json();
+    const body: TClientHistroy = await req.json();
 
     const {
         name,

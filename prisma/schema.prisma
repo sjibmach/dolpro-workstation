@@ -127,6 +127,22 @@ enum ClientStatusId {
     blacklisted
 }
 
+enum ClientStatusEnum {
+    new // Neu – noch kein Kontakt
+    contacting // Kontaktaufnahme läuft
+    failedContact // Kontaktaufnahme erfolglos
+    interested // Interessiert – weitere Gespräche geplant
+    offerToSend // Angebot senden
+    offerSent // Angebot verschickt
+    negotiation // Vertragsverhandlung
+    contactLater // Später erneut kontaktieren
+    activeWithoutContract // Zusammenarbeit ohne Vertrag
+    contracted // Zusammenarbeit mit Vertrag
+    inactive // Inaktiv – aktuell keine Zusammenarbeit
+    notInterested // Kein Interesse
+    blacklisted // Nicht weiter kontaktieren (gesperrt)
+}
+
 model ClientStatus {
     id            String          @id @default(cuid())
     name          String
@@ -138,12 +154,28 @@ model ClientStatus {
     @@map("client_statuses")
 }
 
+enum ClientStatusReasonEnum {
+    noNeed // Kein Bedarf
+    hasPartner // Bereits fester Partner
+    tooExpensive // Zu teuer
+    usesInternal // Nutzt interne Lösung
+    tooComplicated // Ablauf zu kompliziert
+    contractIssues // Vertragsbedingungen unpassend
+    privacyConcerns // Datenschutzbedenken
+    badCommunication // Kommunikation unzureichend
+    noOnline // Möchte nur in Präsenz – kein Online
+    badPayment // Schlechte Zahlungsmoral / Zahlungsverzug
+    rude // Unfreundlicher Umgangston
+    unethical // Diskriminierendes oder unethisches Verhalten
+}
+
 model ClientStatusReason {
-    id        String   @id @default(cuid())
-    name      String
-    active    Boolean  @default(true)
-    sortIndex Int?
-    clients   Client[]
+    id            String          @id @default(cuid())
+    name          String
+    active        Boolean         @default(true)
+    sortIndex     Int?
+    clients       Client[]
+    ClientHistory ClientHistory[]
 
     @@map("client_status_reasons")
 }
@@ -186,13 +218,12 @@ model ClientHistory {
     clientId String
     client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-    type      ClientHistoryType
-    fieldName String? // bei fieldChange
-    oldValue  String? // bei fieldChange
-    newValue  String? // bei fieldChange
-    statusId  String? // bei statusChange
-    status    ClientStatus?     @relation(fields: [statusId], references: [id])
-    note      String? // bei type = note
+    newStatusId  String? // nur wenn Status geändert wurde
+    newStatus    ClientStatus?       @relation(fields: [newStatusId], references: [id])
+    reasonId     String? // z. B. bei Status „notInterested“
+    reason       ClientStatusReason? @relation(fields: [reasonId], references: [id])
+    followUpDate DateTime? // Wiedervorlage, z. B. bei „später kontaktieren“
+    note         String? // Freitext-Eintrag
 
     creatorId String
     updatorId String?

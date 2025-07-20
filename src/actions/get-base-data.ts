@@ -44,6 +44,11 @@ export const getLanguages = async () => {
     return result.sort(sortBySortIndex);
 };
 
+export const getClientStatusReasons = async () => {
+    const result = await prisma.clientStatusReason.findMany();
+    return result.sort(sortBySortIndex);
+};
+
 export const getClientsForAddingJobs = async () => {
     const result = await prisma.client.findMany({
         select: {
