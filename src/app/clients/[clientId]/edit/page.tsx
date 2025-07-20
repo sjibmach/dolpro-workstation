@@ -16,6 +16,7 @@ import CopyButton from '@/components/custom-ui/copy-button';
 import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
 import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
 import { ClientHistroyAddForm } from '../_components/client-history-add-form';
+import { Badge } from '@/components/ui/badge';
 
 export type paramsType = Promise<{ clientId: string }>;
 
@@ -34,6 +35,16 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
             type: true,
             statusReason: true,
             city: true,
+            clientHistory: {
+                include: {
+                    newStatus: true,
+                    reason: true,
+                    creator: true,
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            },
         },
     });
 
@@ -375,8 +386,92 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
             <NewCardContainer className="md:col-span-2">
                 <NewCard>
                     <NewCardHeader>Verlauf</NewCardHeader>
+
                     <NewCardBody>
-                        <NewCardItem></NewCardItem>
+                        {client.clientHistory &&
+                        client.clientHistory.length > 0 ? (
+                            client.clientHistory.map(history => (
+                                <NewCardItem
+                                    key={history.id}
+                                    first={
+                                        history === client.clientHistory?.[0]
+                                    }
+                                    last={
+                                        history ===
+                                        client.clientHistory?.[
+                                            client.clientHistory.length - 1
+                                        ]
+                                    }
+                                >
+                                    {history.newStatus ? (
+                                        <>
+                                            <div className="text-xs text-gray-600 dark:text-gray-400">
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="mr-1"
+                                                >
+                                                    Status Änderung
+                                                </Badge>
+                                                {history.createdAt &&
+                                                    `${format(
+                                                        history.createdAt,
+                                                        'dd.MM.yyyy HH:mm'
+                                                    )} von ${history.creator?.firstName || history.creator?.lastName || 'unbekannt'}`}
+                                            </div>
+                                            <div>
+                                                {history.newStatus.name}
+                                                {history.reason && (
+                                                    <span>
+                                                        {' - '}
+                                                        {history.reason.name}
+                                                    </span>
+                                                )}
+                                                {history.followUpDate && (
+                                                    <span className="text-xs text-gray-500">
+                                                        {' '}
+                                                        Deadline:{' '}
+                                                        {format(
+                                                            history.followUpDate,
+                                                            'dd.MM.yyyy'
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {history.note && (
+                                                <div className="text-xs text-gray-600 dark:text-gray-400">
+                                                    {'Kommentar: '}{' '}
+                                                    {history.note}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="text-xs text-gray-600 dark:text-gray-400">
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="mr-1"
+                                                >
+                                                    Historie Eintrag
+                                                </Badge>
+                                                {history.createdAt &&
+                                                    `${format(
+                                                        history.createdAt,
+                                                        'dd.MM.yyyy HH:mm'
+                                                    )} von ${history.creator?.firstName || history.creator?.lastName || 'unbekannt'}`}
+                                            </div>
+                                            <div>
+                                                {history.note ||
+                                                    'Keine Beschreibung'}
+                                            </div>
+                                        </>
+                                    )}
+                                </NewCardItem>
+                            ))
+                        ) : (
+                            <NewCardItem last first className="text-gray-500">
+                                Keine Verlaufsdaten vorhanden.
+                            </NewCardItem>
+                        )}
                     </NewCardBody>
                 </NewCard>
             </NewCardContainer>

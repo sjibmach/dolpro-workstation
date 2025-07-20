@@ -54,9 +54,22 @@ export async function POST(req: Request) {
         await prisma.clientHistory.create({
             data: {
                 clientId,
-                newStatusId: !!statusId ? statusId : null,
-                reasonId: !!statusReasonId ? statusReasonId : null,
-                followUpDate: followUpDate ? new Date(followUpDate) : null,
+                newStatusId: statusIdHasChanged
+                    ? !!statusId
+                        ? statusId
+                        : null
+                    : null,
+                reasonId: statusIdHasChanged
+                    ? !!statusReasonId
+                        ? statusReasonId
+                        : null
+                    : null,
+                followUpDate: statusIdHasChanged
+                    ? followUpDate
+                        ? new Date(followUpDate)
+                        : null
+                    : null,
+
                 note: note || null,
                 creatorId: 'ibrahim', // TODO: Replace with actual user ID
                 updatorId: 'ibrahim', // TODO: Replace with actual user ID

@@ -11,6 +11,13 @@ export type TClientFullOverview = Prisma.ClientGetPayload<{
                 city: true;
             };
         };
+        clientHistory: {
+            include: {
+                newStatus: true;
+                reason: true;
+                creator: true;
+            };
+        };
     };
 }>;
 
