@@ -119,7 +119,11 @@ export function ClientHistroyAddForm({ client }: { client: Client }) {
             <NewCardBody>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <NewCardItem className="grid gap-x-2 gap-y-4 sm:grid-cols-2">
+                        <NewCardItem
+                            className="grid gap-x-2 gap-y-4 sm:grid-cols-2"
+                            last
+                            first
+                        >
                             <div>
                                 <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
                                     Status

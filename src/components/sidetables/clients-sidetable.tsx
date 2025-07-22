@@ -55,7 +55,7 @@ const ClientsSidetable = ({
                     <>
                         {filteredClients.map((client, index) => (
                             <Link
-                                href={`/clients/${client.id}/edit`}
+                                href={`/client/${client.id}/edit`}
                                 title={client.name}
                                 key={client.id}
                             >

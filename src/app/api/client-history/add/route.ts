@@ -1,4 +1,4 @@
-import { TClientHistroyAdd } from '@/app/clients/[clientId]/_components/client-history-add-form';
+import { TClientHistroyAdd } from '@/app/client/[clientId]/_components/client-history-add-form';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 

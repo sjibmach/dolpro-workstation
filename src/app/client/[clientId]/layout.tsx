@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ClientTabList } from './_components/clients-tab-list';
 
 export type paramsType = Promise<{ clientId: string }>;
 
@@ -19,6 +20,7 @@ const ClientsLayout = async ({
                     Test Layout for Client Id
                 </h1>
                 <p>This is the client page for client with ID: {clientId} </p>
+                <ClientTabList clientId={clientId} />
             </div>
             {children}
         </div>

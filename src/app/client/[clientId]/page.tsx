@@ -4,7 +4,7 @@ export type paramsType = Promise<{ clientId: string }>;
 
 async function ClientPage({ params }: { params: paramsType }) {
     const { clientId } = await params;
-    redirect(`/clients/${clientId}/edit`);
+    redirect(`/client/${clientId}/edit`);
 }
 
 export default ClientPage;

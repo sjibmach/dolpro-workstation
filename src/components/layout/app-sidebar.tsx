@@ -40,9 +40,9 @@ export const navigation = [
     },
     {
         name: 'Auftraggeber',
-        href: '/clients',
+        href: '/client',
         icon: HiUsers,
-        current: (pathname: string | null) => pathname?.startsWith('/clients'),
+        current: (pathname: string | null) => pathname?.startsWith('/client'),
     },
     {
         name: 'Aufträge',
