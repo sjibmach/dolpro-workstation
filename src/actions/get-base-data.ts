@@ -39,6 +39,11 @@ export const getJobTypes = async () => {
     return result.sort(sortBySortIndex);
 };
 
+export const getJobModes = async () => {
+    const result = await prisma.jobMode.findMany();
+    return result.sort(sortBySortIndex);
+};
+
 export const getLanguages = async () => {
     const result = await prisma.language.findMany();
     return result.sort(sortBySortIndex);

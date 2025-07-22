@@ -217,6 +217,31 @@ const NewCardItemAddButton = React.forwardRef<HTMLLIElement, NewCardItemProps>(
 
 NewCardItemAddButton.displayName = 'NewCardItemAddButton';
 
+interface NewCardItemDataProps {
+    title: string;
+    value: string | null | undefined;
+    content: React.ReactNode | null | undefined;
+}
+
+const NewCardItemData: React.FC<NewCardItemDataProps> = ({
+    title,
+    value,
+    content,
+}) => {
+    const isEmpty = !value;
+
+    return (
+        <div className="flex-1">
+            <div className="text-xs text-gray-600 dark:text-gray-400">
+                {title}
+            </div>
+            <div className={cn(isEmpty && 'text-gray-400')}>
+                {!!content ? content : 'N/A'}
+            </div>
+        </div>
+    );
+};
+
 export {
     NewCard,
     NewCardBody,
@@ -225,4 +250,5 @@ export {
     NewCardContainer,
     NewCardItemAsButton,
     NewCardItemAddButton,
+    NewCardItemData,
 };

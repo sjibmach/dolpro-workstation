@@ -335,7 +335,6 @@ model Job {
     startTime             String?
     endTime               String?
     durationMinutes       Int?
-    mode                  String?
     addressStreet         String?
     addressZip            String?
     addressCityId         String?
@@ -360,8 +359,20 @@ model Job {
     createdAt             DateTime           @default(now())
     updatedAt             DateTime           @updatedAt
     JobContactperson      JobContactperson[]
+    JobMode               JobMode?           @relation(fields: [jobModeId], references: [id])
+    jobModeId             String?
 
     @@map("jobs")
+}
+
+model JobMode {
+    id        String  @id @default(cuid())
+    name      String
+    active    Boolean @default(true)
+    sortIndex Int?
+    jobs      Job[]
+
+    @@map("job_modes")
 }
 
 model JobStatus {

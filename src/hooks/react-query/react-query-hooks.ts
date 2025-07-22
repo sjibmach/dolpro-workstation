@@ -59,6 +59,14 @@ export const useQueryJobTypes = () => {
     });
 };
 
+export const useQueryJobModes = () => {
+    return useQuery<JobType[]>({
+        queryKey: ['job-modes'],
+        queryFn: async () =>
+            fetch('/api/base-data/job-modes').then(res => res.json()),
+    });
+};
+
 export const useQueryLanguages = () => {
     return useQuery<Language[]>({
         queryKey: ['languages'],

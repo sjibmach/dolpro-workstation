@@ -48,7 +48,7 @@ export const navigation = [
         name: 'Aufträge',
         href: '/jobs',
         icon: HiDocumentDuplicate,
-        current: (pathname: string | null) => pathname?.startsWith('/jobs'),
+        current: (pathname: string | null) => pathname?.startsWith('/job'),
     },
     {
         name: 'Rechnungen',

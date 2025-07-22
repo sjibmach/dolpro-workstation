@@ -7,6 +7,7 @@ import {
     NewCardContainer,
     NewCardHeader,
     NewCardItem,
+    NewCardItemData,
 } from '@/components/custom-ui/new-card';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -64,85 +65,40 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Name
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.name && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.name || 'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Kürzel
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.nameShortcut && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.nameShortcut || 'N/A'}
-                                </div>
-                            </div>
+                            <NewCardItemData
+                                title="Name"
+                                value={client?.name}
+                                content={client?.name}
+                            />
+                            <NewCardItemData
+                                title="Kürzel"
+                                value={client?.nameShortcut}
+                                content={client?.nameShortcut}
+                            />
                         </NewCardItem>
                         <NewCardItem className="flex-gap-2 flex justify-between">
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    E-Mail
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.email && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.email || 'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Telefon
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.phone && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.phone || 'N/A'}
-                                </div>
-                            </div>
+                            <NewCardItemData
+                                title="E-Mail"
+                                value={client?.email}
+                                content={client?.email}
+                            />
+                            <NewCardItemData
+                                title="Telefon"
+                                value={client?.phone}
+                                content={client?.phone}
+                            />
                         </NewCardItem>
-                        <NewCardItem
-                            className="flex-gap-2 flex justify-between"
-                            last
-                        >
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Auftragsgeber-Typ{' '}
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.typeId && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.type?.name || 'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Status
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.statusId && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.status?.name || 'N/A'}
-                                </div>
-                            </div>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Auftragsgeber Type"
+                                value={client?.type.name}
+                                content={client?.type.name}
+                            />
+                            <NewCardItemData
+                                title="Status"
+                                value={client?.status?.name}
+                                content={client?.status?.name}
+                            />
                         </NewCardItem>
                     </NewCardBody>
                 </NewCard>
@@ -251,43 +207,30 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                         <ClientAddressEditModal client={client} />
                     </NewCardHeader>
                     <NewCardBody>
-                        <NewCardItem className="flex-gap-2 flex justify-between">
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Straße & Hausnummer
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.street && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.street || 'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Postleitzahl
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.zip && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.zip || 'N/A'}
-                                </div>
-                            </div>
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            first
+                        >
+                            <NewCardItemData
+                                title="Straße & Hausnummer"
+                                value={client?.street}
+                                content={client?.street}
+                            />
+                            <NewCardItemData
+                                title="Postleitzahl"
+                                value={client?.zip}
+                                content={client?.zip}
+                            />
                         </NewCardItem>
-                        <NewCardItem last>
-                            <div className="text-xs text-gray-600 dark:text-gray-400">
-                                Stadt
-                            </div>
-                            <div
-                                className={cn(
-                                    !client?.cityId && 'text-gray-400'
-                                )}
-                            >
-                                {client?.city?.name || 'N/A'}
-                            </div>
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
+                            <NewCardItemData
+                                title="Ort"
+                                value={client?.city?.name}
+                                content={client?.city?.name}
+                            />
                         </NewCardItem>
                     </NewCardBody>
                 </NewCard>
@@ -300,84 +243,58 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                             first
                             className="flex-gap-2 flex items-center justify-between"
                         >
-                            <div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    id
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.id && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.id || 'N/A'}
-                                </div>
-                            </div>
-                            <CopyButton copyText={client?.id || ''} />
+                            <NewCardItemData
+                                title="id"
+                                value={client.id}
+                                content={
+                                    <div className="flex items-center justify-between">
+                                        {client.id}
+                                        <CopyButton
+                                            copyText={client?.id || ''}
+                                        />
+                                    </div>
+                                }
+                            />
                         </NewCardItem>
+
                         <NewCardItem className="flex-gap-2 flex justify-between">
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Erstellt am
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.createdAt && 'text-gray-400'
-                                    )}
-                                >
-                                    {(client?.createdAt &&
-                                        format(
-                                            client?.createdAt,
+                            <NewCardItemData
+                                title="Erstellt am"
+                                value={String(client?.createdAt)}
+                                content={
+                                    <div>
+                                        {format(
+                                            client.createdAt,
                                             'dd.MM.yyyy HH:mm:ss'
-                                        )) ||
-                                        'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Erstellt von
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.creatorId && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.creatorId || 'N/A'}
-                                </div>
-                            </div>
+                                        )}
+                                    </div>
+                                }
+                            />
+                            <NewCardItemData
+                                title="Erstellt von"
+                                value={client?.creatorId}
+                                content={client?.creatorId}
+                            />
                         </NewCardItem>
-                        <NewCardItem
-                            className="flex-gap-2 flex justify-between"
-                            last
-                        >
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Aktualisiert am
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.updatedAt && 'text-gray-400'
-                                    )}
-                                >
-                                    {(client?.updatedAt &&
-                                        format(
-                                            client?.updatedAt,
+
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Aktualisiert am"
+                                value={String(client?.updatedAt)}
+                                content={
+                                    <div>
+                                        {format(
+                                            client.updatedAt,
                                             'dd.MM.yyyy HH:mm:ss'
-                                        )) ||
-                                        'N/A'}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <div className="text-xs text-gray-600 dark:text-gray-400">
-                                    Aktualisiert von
-                                </div>
-                                <div
-                                    className={cn(
-                                        !client?.updatorId && 'text-gray-400'
-                                    )}
-                                >
-                                    {client?.updatorId || 'N/A'}
-                                </div>
-                            </div>
+                                        )}
+                                    </div>
+                                }
+                            />
+                            <NewCardItemData
+                                title="Aktualisiert von"
+                                value={client?.updatorId}
+                                content={client?.updatorId}
+                            />
                         </NewCardItem>
                     </NewCardBody>
                 </NewCard>

@@ -6,15 +6,16 @@ import { ArrowDown, ArrowRight, ArrowUp, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { priorities, statuses } from '../data/data';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 import { JobAddModal } from '@/components/modals/app-modals/job-add-modal';
 import {
+    useQueryClientsForAddingJobs,
     useQueryJobPriorities,
     useQueryJobStatuses,
 } from '@/hooks/react-query/react-query-hooks';
 import { HiArrowRight, HiArrowUp } from 'react-icons/hi2';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -54,11 +55,14 @@ export function DataTableToolbar<TData>({
     const { data: jobStatuses, isLoading: isLoadingJobStatuses } =
         useQueryJobStatuses();
 
+    const { data: clients, isLoading: isLoadingClients } =
+        useQueryClientsForAddingJobs();
+
     const isFiltered = table.getState().columnFilters.length > 0;
 
     return (
         <div className="flex items-center justify-between">
-            <div className="flex flex-1 items-center space-x-2">
+            <div className="flex flex-1 flex-wrap items-center space-x-2">
                 <Input
                     placeholder="Aufträge filtern..."
                     value={
@@ -73,6 +77,13 @@ export function DataTableToolbar<TData>({
                     }}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
+                {table.getColumn('clientName') && !isLoadingJobStatuses && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn('clientName')}
+                        title="Auftragsgeber"
+                        options={clients}
+                    />
+                )}
                 {table.getColumn('statusId') && !isLoadingJobStatuses && (
                     <DataTableFacetedFilter
                         column={table.getColumn('statusId')}

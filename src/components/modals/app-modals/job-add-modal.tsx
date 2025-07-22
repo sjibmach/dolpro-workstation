@@ -13,6 +13,7 @@ import { useState } from 'react';
 import {
     useQueryCities,
     useQueryClientsForAddingJobs,
+    useQueryJobModes,
     useQueryJobPriorities,
     useQueryJobStatuses,
     useQueryJobTypes,
@@ -36,7 +37,7 @@ const JobAddSchema = z.object({
     jobDate: z.string().nullable().optional(),
     startTime: z.string().nullable().optional(),
     endTime: z.string().nullable().optional(),
-    mode: z.string().nullable().optional(),
+    modeId: z.string().nullable().optional(),
     fee: z.number().nullable().optional(),
     interpreterFee: z.number().nullable().optional(),
     note: z.string().nullable().optional(),
@@ -69,6 +70,8 @@ export function JobAddModal() {
     const { data: clients, isLoading: isLoadingClients } =
         useQueryClientsForAddingJobs();
 
+    const { data: jobModes, isLoading: isLoadingJobModes } = useQueryJobModes();
+
     const form = useForm<TJobAdd>({
         resolver: zodResolver(JobAddSchema),
         defaultValues: {
@@ -81,7 +84,7 @@ export function JobAddModal() {
             jobDate: '',
             startTime: '',
             endTime: '',
-            mode: '',
+            modeId: '',
             fee: 0,
             interpreterFee: 0,
             note: '',
@@ -97,7 +100,7 @@ export function JobAddModal() {
         },
     });
 
-    const mode = form.watch('mode');
+    const modeId = form.watch('modeId');
 
     const onSubmit = async (values: TJobAdd) => {
         console.log('values', values);
@@ -190,14 +193,11 @@ export function JobAddModal() {
                     <TabsContent value="location" className="space-y-6">
                         <RHFRadioGroup
                             control={form.control}
-                            name="mode"
+                            name="modeId"
                             label="Modus"
-                            options={[
-                                { id: 'online', name: 'Online' },
-                                { id: 'onSite', name: 'Präsenz' },
-                            ]}
+                            options={jobModes}
                         />
-                        {mode === 'onSite' && (
+                        {modeId === 'onSite' && (
                             <div className="mt-8 grid gap-4 sm:grid-cols-2">
                                 <RHFInput
                                     name="addressStreet"

@@ -2,13 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 
-import { priorities } from '../data/data';
 import { TJobTable } from '../data/schema';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import DescriptionCell from './description-cell';
+import Link from 'next/link';
 
 export const columns: ColumnDef<TJobTable>[] = [
     {
@@ -57,6 +57,7 @@ export const columns: ColumnDef<TJobTable>[] = [
                 <DescriptionCell
                     description={row.original.description}
                     jobTypeId={row.original.jobTypeId}
+                    jobId={row.original.id}
                 />
             );
         },
@@ -67,7 +68,16 @@ export const columns: ColumnDef<TJobTable>[] = [
             <DataTableColumnHeader column={column} title="Auftragsgeber" />
         ),
         cell: ({ row }) => {
-            return <div className="w-32">{row.original.clientName}</div>;
+            return (
+                // <div className="w-32">
+                <Link
+                    href={'/client/' + row.original.clientId + '/jobs'}
+                    className="w-32 hover:underline"
+                >
+                    {row.original.clientName}
+                </Link>
+                // </div>
+            );
         },
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));

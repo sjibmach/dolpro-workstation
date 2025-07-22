@@ -30,8 +30,8 @@ const ClientDeleteAlertModal = ({ clientId }: { clientId: string }) => {
             description="Bist du sicher, dass du diesen Auftraggeber löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
             actionLabel="Löschen"
             trigger={
-                <div className="group flex w-full cursor-pointer items-center gap-2 text-red-500 hover:text-red-700">
-                    <HiOutlineTrash className="text-red-500 group-hover:text-red-700" />
+                <div className="group flex w-full cursor-pointer items-center gap-2">
+                    <HiOutlineTrash className="text-red-500" />
                     Löschen
                 </div>
             }
