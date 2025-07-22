@@ -261,14 +261,10 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItemData
                                 title="Erstellt am"
                                 value={String(client?.createdAt)}
-                                content={
-                                    <div>
-                                        {format(
-                                            client.createdAt,
-                                            'dd.MM.yyyy HH:mm:ss'
-                                        )}
-                                    </div>
-                                }
+                                content={format(
+                                    client.createdAt,
+                                    'dd.MM.yyyy HH:mm:ss'
+                                )}
                             />
                             <NewCardItemData
                                 title="Erstellt von"
@@ -281,14 +277,10 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItemData
                                 title="Aktualisiert am"
                                 value={String(client?.updatedAt)}
-                                content={
-                                    <div>
-                                        {format(
-                                            client.updatedAt,
-                                            'dd.MM.yyyy HH:mm:ss'
-                                        )}
-                                    </div>
-                                }
+                                content={format(
+                                    client.updatedAt,
+                                    'dd.MM.yyyy HH:mm:ss'
+                                )}
                             />
                             <NewCardItemData
                                 title="Aktualisiert von"

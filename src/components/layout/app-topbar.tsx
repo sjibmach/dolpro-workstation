@@ -51,28 +51,11 @@ const AppTopbar = ({
             />
 
             <div className="flex flex-1 justify-between gap-x-4 self-stretch lg:gap-x-6">
-                {/* <form
-                    action="#"
-                    method="GET"
-                    className="grid flex-1 grid-cols-1"
-                >
-                    <input
-                        name="search"
-                        type="search"
-                        placeholder="Search"
-                        aria-label="Search"
-                        className="col-start-1 row-start-1 block size-full bg-white pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
-                    />
-                    <MagnifyingGlassIcon
-                        aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 size-5 self-center text-gray-400"
-                    />
-                </form> */}
                 <div></div>
                 <div className="flex items-center gap-x-4 lg:gap-x-6">
                     <button
                         type="button"
-                        className="flex-shrink-0 rounded-full bg-gray-100 p-2 text-gray-700 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:outline-none dark:bg-gray-800 dark:text-gray-400"
+                        className="flex-shrink-0 cursor-pointer rounded-full bg-gray-100 p-2 text-gray-700 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:outline-none dark:bg-gray-800 dark:text-gray-400"
                         onClick={toggleTheme}
                     >
                         {theme === 'dark' ? (

@@ -17,11 +17,11 @@ import { TJobForSideTable } from '@/lib/prismaTypes';
 import { cn } from '@/lib/utils';
 import { ClientAddModal } from '@/components/modals/app-modals/client-add-modal';
 import { format } from 'date-fns';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
+import { HiArrowLeft } from 'react-icons/hi2';
 
 const JobsSidetable = ({ jobs }: { jobs: TJobForSideTable[] | undefined }) => {
     const params = useParams();
-    const clientId = params.clientId as string;
+    const jobId = params.jobId as string;
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredJobs = jobs?.filter(job =>
@@ -62,7 +62,7 @@ const JobsSidetable = ({ jobs }: { jobs: TJobForSideTable[] | undefined }) => {
                                     last={index === filteredJobs.length - 1}
                                     className={cn(
                                         'flex items-center justify-between',
-                                        job.id === clientId
+                                        job.id === jobId
                                             ? 'bg-amber-100 dark:bg-amber-800'
                                             : 'hover:bg-amber-50 dark:hover:bg-amber-700'
                                     )}
@@ -97,7 +97,7 @@ const JobsSidetable = ({ jobs }: { jobs: TJobForSideTable[] | undefined }) => {
                                                         }}
                                                     >
                                                         <ClientDeleteAlertModal
-                                                            clientId={job.id}
+                                                            jobId={job.id}
                                                         />
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>

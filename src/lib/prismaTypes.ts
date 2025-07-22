@@ -39,10 +39,11 @@ export type TJobFullOverview = Prisma.JobGetPayload<{
         client: true;
         addressCity: true;
         interpreter: true;
-        JobContactperson: true;
+        jobContactperson: true;
         jobType: true;
         languageTo: true;
         priority: true;
         status: true;
+        jobMode: true;
     };
 }>;

@@ -317,50 +317,52 @@ model InterpreterLanguage {
 }
 
 model Job {
-    id                    String             @id @default(cuid())
-    clientId              String
-    client                Client             @relation(fields: [clientId], references: [id])
-    interpreterId         String?
-    interpreter           Interpreter?       @relation(fields: [interpreterId], references: [id])
-    languageToId          String
-    languageTo            Language           @relation("JobToLanguage", fields: [languageToId], references: [id])
-    jobTypeId             String?
-    jobType               JobType?           @relation(fields: [jobTypeId], references: [id])
-    priorityId            String?            @default("medium")
-    priority              JobPriority?       @relation(fields: [priorityId], references: [id])
-    statusId              String
-    status                JobStatus          @relation(fields: [statusId], references: [id])
-    description           String?
-    jobDate               DateTime?
-    startTime             String?
-    endTime               String?
-    durationMinutes       Int?
-    addressStreet         String?
-    addressZip            String?
-    addressCityId         String?
-    addressCity           City?              @relation(fields: [addressCityId], references: [id])
-    fee                   Float?
-    interpreterFee        Float?
-    code                  String
-    codeNumber            Int
-    entryDate             DateTime?
-    distanceKm            Int?
-    kmRateClient          Float?
-    kmRateInterpreter     Float?
-    surchargeRareLanguage Float?
-    surchargeUrgency      Float?
-    rhythmText            String?
-    finalPriceClient      Float?
-    finalPriceInterpreter Float?
-    invoiceAddress        String?
-    notes                 String?
-    creatorId             String?
-    updatorId             String?
-    createdAt             DateTime           @default(now())
-    updatedAt             DateTime           @updatedAt
-    JobContactperson      JobContactperson[]
-    JobMode               JobMode?           @relation(fields: [jobModeId], references: [id])
-    jobModeId             String?
+    id                     String             @id @default(cuid())
+    clientId               String
+    client                 Client             @relation(fields: [clientId], references: [id])
+    interpreterId          String?
+    interpreter            Interpreter?       @relation(fields: [interpreterId], references: [id])
+    languageToId           String
+    languageTo             Language           @relation("JobToLanguage", fields: [languageToId], references: [id])
+    jobTypeId              String?
+    jobType                JobType?           @relation(fields: [jobTypeId], references: [id])
+    priorityId             String?            @default("medium")
+    priority               JobPriority?       @relation(fields: [priorityId], references: [id])
+    statusId               String
+    status                 JobStatus          @relation(fields: [statusId], references: [id])
+    description            String?
+    jobDate                DateTime?
+    startTime              String?
+    endTime                String?
+    durationMinutes        Int?
+    addressStreet          String?
+    addressZip             String?
+    addressCityId          String?
+    addressCity            City?              @relation(fields: [addressCityId], references: [id])
+    fee                    Float?
+    interpreterFee         Float?
+    code                   String
+    codeNumber             Int
+    entryDate              DateTime?
+    distanceKm             Int?
+    kmRateClient           Float?
+    kmRateInterpreter      Float?
+    surchargeRareLanguage  Float?
+    surchargeUrgency       Float?
+    rhythmText             String?
+    finalPriceClient       Float?
+    finalPriceInterpreter  Float?
+    invoiceAddress         String?
+    notes                  String?
+    creatorId              String?
+    updatorId              String?
+    createdAt              DateTime           @default(now())
+    updatedAt              DateTime           @updatedAt
+    jobContactperson       JobContactperson[]
+    jobMode                JobMode?           @relation(fields: [jobModeId], references: [id])
+    jobModeId              String?
+    isConfirmedInterpreter Boolean            @default(false)
+    isConfirmedClient      Boolean            @default(false)
 
     @@map("jobs")
 }
