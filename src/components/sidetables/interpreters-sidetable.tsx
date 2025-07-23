@@ -70,6 +70,10 @@ const InterpretersSidetable = ({
                                                 {interpreter.code
                                                     ? interpreter.code
                                                     : ''}{' '}
+                                                {interpreter.firstName
+                                                    ? interpreter.firstName +
+                                                      ' '
+                                                    : ''}
                                                 {interpreter.lastName}
                                             </span>
                                             {/* <DropdownMenu>

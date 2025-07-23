@@ -20,7 +20,7 @@ const ClientsLayout = async ({
 
     if (!interpreter) return <>Keine Dolmetscher</>;
     const interpreterName =
-        `${interpreter.code ? interpreter.code : ''}` +
+        `${interpreter.code ? interpreter.code + ' ' : ''}` +
         `${interpreter.lastName ? interpreter.lastName : ''}`;
 
     return (
