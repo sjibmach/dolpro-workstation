@@ -136,7 +136,7 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                 </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
-                        <span>Adresse</span>
+                        <span>Verfügbarkeit</span>
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
@@ -164,7 +164,10 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 />
                             </NewCardItem>
                         )}
-                        <NewCardItem className="flex-gap-2 flex justify-between">
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
                             <NewCardItemData
                                 title="Auto verfügbar"
                                 value={interpreter?.car}
@@ -195,7 +198,10 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 content={interpreter?.zip}
                             />
                         </NewCardItem>
-                        <NewCardItem className="flex-gap-2 flex justify-between">
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
                             <NewCardItemData
                                 title="City"
                                 value={interpreter?.city?.name}
@@ -231,7 +237,10 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 content={interpreter?.kmRate + ' €'}
                             />
                         </NewCardItem>
-                        <NewCardItem className="flex-gap-2 flex justify-between">
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
                             <NewCardItemData
                                 title="Iban"
                                 value={interpreter?.iban}

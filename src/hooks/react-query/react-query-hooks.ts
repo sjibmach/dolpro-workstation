@@ -107,3 +107,13 @@ export const useQueryInterpreterStatuses = () => {
             ),
     });
 };
+
+export const useQueryInterpretersForJobs = () => {
+    return useQuery<TIdAndNameObject[]>({
+        queryKey: ['interpreters-for-jobs'],
+        queryFn: async () =>
+            fetch('/api/base-data/interpreters-for-jobs').then(res =>
+                res.json()
+            ),
+    });
+};

@@ -10,7 +10,7 @@ import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 import { JobAddModal } from '@/components/modals/app-modals/job-add-modal';
 import {
-    useQueryClientsForAddingJobs,
+    useQueryInterpretersForJobs,
     useQueryJobPriorities,
     useQueryJobStatuses,
 } from '@/hooks/react-query/react-query-hooks';
@@ -56,7 +56,7 @@ export function DataTableToolbar<TData>({
         useQueryJobStatuses();
 
     const { data: clients, isLoading: isLoadingClients } =
-        useQueryClientsForAddingJobs();
+        useQueryInterpretersForJobs();
 
     const isFiltered = table.getState().columnFilters.length > 0;
 

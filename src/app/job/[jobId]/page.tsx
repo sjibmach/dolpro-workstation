@@ -11,6 +11,7 @@ import {
 } from '@/components/custom-ui/new-card';
 import { differenceInCalendarDays, format } from 'date-fns';
 import JobDateConfirmation from './_components/job-date-confirmation';
+import { JobAssignmentDetailsEditModal } from '@/components/modals/app-modals/job-assignment-details-edit-modal';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +49,7 @@ async function ClientPage({ params }: { params: paramsType }) {
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Vermittlungsdaten</span>
+                        <JobAssignmentDetailsEditModal job={job} />
                     </NewCardHeader>
 
                     <NewCardBody>

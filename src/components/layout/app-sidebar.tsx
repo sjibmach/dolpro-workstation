@@ -50,24 +50,24 @@ export const navigation = [
         icon: HiDocumentDuplicate,
         current: (pathname: string | null) => pathname?.startsWith('/job'),
     },
-    {
-        name: 'Rechnungen',
-        href: '/invoices',
-        icon: HiDocumentCurrencyDollar,
-        current: (pathname: string | null) => pathname?.startsWith('/invoices'),
-    },
-    {
-        name: 'Zahlungen',
-        href: '/payouts',
-        icon: TbUserDollar,
-        current: (pathname: string | null) => pathname?.startsWith('/invoices'),
-    },
-    {
-        name: 'Kalendar',
-        href: '/calendar',
-        icon: HiCalendar,
-        current: (pathname: string | null) => pathname?.startsWith('/matching'),
-    },
+    // {
+    //     name: 'Rechnungen',
+    //     href: '/invoices',
+    //     icon: HiDocumentCurrencyDollar,
+    //     current: (pathname: string | null) => pathname?.startsWith('/invoices'),
+    // },
+    // {
+    //     name: 'Zahlungen',
+    //     href: '/payouts',
+    //     icon: TbUserDollar,
+    //     current: (pathname: string | null) => pathname?.startsWith('/invoices'),
+    // },
+    // {
+    //     name: 'Kalendar',
+    //     href: '/calendar',
+    //     icon: HiCalendar,
+    //     current: (pathname: string | null) => pathname?.startsWith('/matching'),
+    // },
 ];
 
 const AppSidebar = ({

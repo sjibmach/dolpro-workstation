@@ -54,6 +54,11 @@ export const getClientStatusReasons = async () => {
     return result.sort(sortBySortIndex);
 };
 
+export const getInterpreterStatuses = async () => {
+    const result = await prisma.interpreterStatus.findMany();
+    return result.sort(sortBySortIndex);
+};
+
 export const getClientsForAddingJobs = async () => {
     const result = await prisma.client.findMany({
         select: {
@@ -64,7 +69,22 @@ export const getClientsForAddingJobs = async () => {
     return result;
 };
 
-export const getInterpreterStatuses = async () => {
-    const result = await prisma.interpreterStatus.findMany();
-    return result.sort(sortBySortIndex);
+export const getInterpretersForJobs = async () => {
+    const result = await prisma.interpreter.findMany({
+        select: {
+            id: true,
+            code: true,
+            firstName: true,
+            lastName: true,
+        },
+    });
+
+    const convertedToName = result.map(interpreter => ({
+        id: interpreter.id,
+        name: `${interpreter.code} - ${interpreter.firstName} ${interpreter.lastName}`,
+    }));
+
+    console.log('convertedToName', convertedToName);
+
+    return convertedToName;
 };

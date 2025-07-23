@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
     useQueryCities,
-    useQueryClientsForAddingJobs,
+    useQueryInterpretersForJobs,
     useQueryJobModes,
     useQueryJobPriorities,
     useQueryJobStatuses,
@@ -68,7 +68,7 @@ export function JobAddModal() {
     const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const { data: clients, isLoading: isLoadingClients } =
-        useQueryClientsForAddingJobs();
+        useQueryInterpretersForJobs();
 
     const { data: jobModes, isLoading: isLoadingJobModes } = useQueryJobModes();
 
