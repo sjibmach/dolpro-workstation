@@ -329,7 +329,6 @@ export function InterpreterAddModal() {
                                 label="Bevorzugte Zeiten"
                             />
                         </div>
-                        <div />
 
                         <RHFInput
                             name="defaultHourlyRate"
