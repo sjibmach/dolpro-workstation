@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
     useQueryCities,
+    useQueryInterpreterStatuses,
     useQueryLanguages,
 } from '@/hooks/react-query/react-query-hooks';
 import RHFInput from '@/components/rhf/rhf-input';
@@ -20,7 +21,9 @@ import { TIdAndNameObject } from '@/lib/types';
 import RHFCombobox from '@/components/rhf/rhf-combobox';
 import { RHFMultiSelect } from '@/components/rhf/rhf-multi-select';
 import { RHFSwitch } from '@/components/rhf/rhf-switch';
-import { Label } from '@/components/ui/label';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 
 const InterpreterAddSchema = z.object({
     firstName: z.string().nullable().optional(),
@@ -62,7 +65,7 @@ const InterpreterAddSchema = z.object({
     defaultHourlyRate: z.number().nullable().optional(),
     kmRate: z.number().nullable().optional(),
     iban: z.string().nullable().optional(),
-    note: z.string().nullable().optional(),
+    notes: z.string().nullable().optional(),
 
     languages: z.array(
         z.object({
@@ -87,12 +90,16 @@ export function InterpreterAddModal() {
     const { data: cities, isLoading: isLoadingCities } = useQueryCities();
     const { data: languages, isLoading: isLoadingLanguages } =
         useQueryLanguages();
+    const {
+        data: interpreterStatuses,
+        isLoading: isLoadingInterpreterStatuses,
+    } = useQueryInterpreterStatuses();
 
     const form = useForm<TInterpreterAdd>({
         resolver: zodResolver(InterpreterAddSchema),
         defaultValues: {
             firstName: '',
-            lastName: '',
+            lastName: 'Mustermann',
             email: '',
             phone1: '',
             phone2: '',
@@ -111,33 +118,35 @@ export function InterpreterAddModal() {
             defaultHourlyRate: 0,
             kmRate: 0,
             iban: '',
-            note: '',
+            notes: '',
             languages: [],
             preferredCities: [],
             statusId: 'new',
         },
     });
 
+    const offersOnSite = form.watch('offersOnSite');
+
     const onSubmit = async (values: TInterpreterAdd) => {
         console.log('values', values);
 
-        // const promise = axios.post('/api/interpreter/add', values);
+        const promise = axios.post('/api/interpreter/add', values);
 
-        // toast.promise(promise, {
-        //     loading: 'Dolmetscher wird hinzugefügt...',
-        //     success: 'Dolmetscher erfolgreich hinzugefügt',
-        //     error: 'Fehler beim Hinzufügen des Dolmetschers',
-        // });
+        toast.promise(promise, {
+            loading: 'Dolmetscher wird hinzugefügt...',
+            success: 'Dolmetscher erfolgreich hinzugefügt',
+            error: 'Fehler beim Hinzufügen des Dolmetschers',
+        });
 
-        // try {
-        //     await promise;
-        //     setOpen(false);
-        // } catch (error) {
-        //     console.error('Fehler beim Senden des Formulars:', error);
-        // } finally {
-        //     form.reset();
-        //     router.refresh();
-        // }
+        try {
+            await promise;
+            setOpen(false);
+        } catch (error) {
+            console.error('Fehler beim Senden des Formulars:', error);
+        } finally {
+            form.reset();
+            router.refresh();
+        }
     };
 
     const body = (
@@ -155,6 +164,18 @@ export function InterpreterAddModal() {
                         value="general"
                         className="my-4 grid gap-x-4 gap-y-6 sm:grid-cols-2"
                     >
+                        {isLoadingInterpreterStatuses ? (
+                            <div>Status laden...</div>
+                        ) : (
+                            <RHFCombobox
+                                label="Status"
+                                options={interpreterStatuses}
+                                name="statusId"
+                                control={form.control}
+                                setValue={form.setValue}
+                            />
+                        )}
+                        <div />
                         <RHFInput
                             name="firstName"
                             label="Vorname"
@@ -215,19 +236,6 @@ export function InterpreterAddModal() {
                             )}
                         </div>
 
-                        <div className="col-span-full">
-                            {isLoadingCities ? (
-                                <p>Lade Städte...</p>
-                            ) : (
-                                <RHFMultiSelect
-                                    label="Städte"
-                                    options={cities as TIdAndNameObject[]}
-                                    control={form.control}
-                                    setValue={form.setValue}
-                                    name="preferredCities"
-                                />
-                            )}
-                        </div>
                         <RHFInput
                             name="interviewDate"
                             control={form.control}
@@ -298,9 +306,24 @@ export function InterpreterAddModal() {
                                 description="Auto verfügbar"
                             />
                         </div>
+                        {offersOnSite && (
+                            <div className="col-span-full">
+                                {isLoadingCities ? (
+                                    <p>Lade Städte...</p>
+                                ) : (
+                                    <RHFMultiSelect
+                                        label="Städte"
+                                        options={cities as TIdAndNameObject[]}
+                                        control={form.control}
+                                        setValue={form.setValue}
+                                        name="preferredCities"
+                                    />
+                                )}
+                            </div>
+                        )}
 
-                        <div className="mb-8">
-                            <RHFInput
+                        <div className="col-span-full mb-8">
+                            <RHFTextArea
                                 name="availability"
                                 control={form.control}
                                 label="Bevorzugte Zeiten"

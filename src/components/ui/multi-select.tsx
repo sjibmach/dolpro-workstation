@@ -275,7 +275,7 @@ export const MultiSelect = React.forwardRef<
                                     >
                                         <CheckIcon className="h-4 w-4" />
                                     </div>
-                                    <span>(Select All)</span>
+                                    <span>(Alle)</span>
                                 </CommandItem>
                                 {options.map(option => {
                                     const isSelected = selectedValues.includes(
@@ -316,7 +316,7 @@ export const MultiSelect = React.forwardRef<
                                                 onSelect={handleClear}
                                                 className="flex-1 cursor-pointer justify-center"
                                             >
-                                                Clear
+                                                Alle löschen
                                             </CommandItem>
                                             <Separator
                                                 orientation="vertical"
@@ -328,7 +328,7 @@ export const MultiSelect = React.forwardRef<
                                         onSelect={() => setIsPopoverOpen(false)}
                                         className="max-w-full flex-1 cursor-pointer justify-center"
                                     >
-                                        Close
+                                        Schließen
                                     </CommandItem>
                                 </div>
                             </CommandGroup>

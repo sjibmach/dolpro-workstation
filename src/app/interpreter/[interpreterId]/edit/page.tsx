@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { TClientFullOverview } from '@/lib/prismaTypes';
 
 import {
     NewCard,
@@ -9,219 +8,107 @@ import {
     NewCardItem,
     NewCardItemData,
 } from '@/components/custom-ui/new-card';
-import { cn } from '@/lib/utils';
+import { TInterpreterFullOverview } from '@/lib/prismaTypes';
 import { format } from 'date-fns';
-import { ClientPersonalDataEditModal } from '@/components/modals/app-modals/client-personal-data-edit-modal';
-import { ClientAddressEditModal } from '@/components/modals/app-modals/client-address-edit-modal';
-import CopyButton from '@/components/custom-ui/copy-button';
-import { ClientContactPersonAddModal } from '@/components/modals/app-modals/client-contact-person-add-modal';
-import { ClientContactPersonEditModal } from '@/components/modals/app-modals/client-contact-person-edit-modal';
-import { ClientHistroyAddForm } from '../_components/client-history-add-form';
-import { Badge } from '@/components/ui/badge';
+import { HiCheck } from 'react-icons/hi2';
 
 export const dynamic = 'force-dynamic';
 
-export type paramsType = Promise<{ clientId: string }>;
+export type paramsType = Promise<{ interpreterId: string }>;
 
-const ClientEditPage = async ({ params }: { params: paramsType }) => {
-    const { clientId } = await params;
+const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
+    const { interpreterId } = await params;
 
-    const client: TClientFullOverview | null = await prisma.client.findUnique({
-        where: { id: clientId },
-        include: {
-            contactPersons: {
-                include: {
-                    city: true,
+    const interpreter: TInterpreterFullOverview | null =
+        await prisma.interpreter.findUnique({
+            where: { id: interpreterId },
+            include: {
+                city: true,
+                status: true,
+                languages: {
+                    include: {
+                        language: true,
+                    },
                 },
+                preferredCities: {
+                    include: {
+                        city: true,
+                    },
+                },
+                jobs: true,
             },
-            status: true,
-            type: true,
-            statusReason: true,
-            city: true,
-            clientHistory: {
-                include: {
-                    newStatus: true,
-                    reason: true,
-                    creator: true,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-            },
-        },
-    });
+        });
 
-    if (!client) {
-        return <div>Client not found</div>;
+    if (!interpreter) {
+        return <div>Interpreter not found</div>;
     }
 
     return (
         <div className="grid w-full gap-10 md:grid-cols-5">
             <NewCardContainer className="md:col-span-3">
-                <ClientHistroyAddForm client={client} />
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
-                        <span>Personaldaten</span>
-
-                        <ClientPersonalDataEditModal client={client} />
+                        <span>Persönliche Daten</span>
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
-                                title="Name"
-                                value={client?.name}
-                                content={client?.name}
+                                title="Vorname"
+                                value={interpreter?.firstName}
+                                content={interpreter?.firstName}
                             />
                             <NewCardItemData
-                                title="Kürzel"
-                                value={client?.nameShortcut}
-                                content={client?.nameShortcut}
-                            />
-                        </NewCardItem>
-                        <NewCardItem className="flex-gap-2 flex justify-between">
-                            <NewCardItemData
-                                title="E-Mail"
-                                value={client?.email}
-                                content={client?.email}
-                            />
-                            <NewCardItemData
-                                title="Telefon"
-                                value={client?.phone}
-                                content={client?.phone}
+                                title="Nachname"
+                                value={interpreter?.lastName}
+                                content={interpreter?.lastName}
                             />
                         </NewCardItem>
                         <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
-                                title="Auftragsgeber Type"
-                                value={client?.type.name}
-                                content={client?.type.name}
+                                title="Email"
+                                value={interpreter?.email}
+                                content={interpreter?.email}
                             />
                             <NewCardItemData
-                                title="Status"
-                                value={client?.status?.name}
-                                content={client?.status?.name}
+                                title="Geschlecht"
+                                value={interpreter?.gender}
+                                content={
+                                    interpreter?.gender === 'm'
+                                        ? 'Männlich'
+                                        : interpreter?.gender === 'w'
+                                          ? 'Weiblich'
+                                          : ''
+                                }
                             />
                         </NewCardItem>
-                    </NewCardBody>
-                </NewCard>
-                <NewCard>
-                    <NewCardHeader className="flex items-center justify-between">
-                        <span>Ansprechpartner</span>
-                        <ClientContactPersonAddModal clientId={clientId} />
-                    </NewCardHeader>
-                    <NewCardBody>
-                        {client.contactPersons &&
-                        client.contactPersons.length > 0 ? (
-                            client.contactPersons.map(person => {
-                                const fullName =
-                                    `${person.firstName || ''} ${person.lastName || ''}`.trim();
-                                const address = person.street;
-                                const zipAndCity =
-                                    `${person.zip || ''} ${person.city?.name || ''}`.trim();
-
-                                return (
-                                    <NewCardItem
-                                        key={person.id}
-                                        className="flex-gap-2 flex justify-between"
-                                        first={
-                                            person ===
-                                            client.contactPersons?.[0]
-                                        }
-                                        last={
-                                            person ===
-                                            client.contactPersons?.[
-                                                client.contactPersons.length - 1
-                                            ]
-                                        }
-                                    >
-                                        <div className="flex-1">
-                                            <div className="text-xs text-gray-600 dark:text-gray-400">
-                                                Anschrift
-                                            </div>
-                                            <div
-                                                className={cn(
-                                                    !fullName && 'text-gray-400'
-                                                )}
-                                            >
-                                                {fullName || 'N/A'}
-                                            </div>
-                                            <div
-                                                className={cn(
-                                                    !address && 'text-gray-400'
-                                                )}
-                                            >
-                                                {address || 'N/A'}
-                                            </div>
-
-                                            <div
-                                                className={cn(
-                                                    !zipAndCity &&
-                                                        'text-gray-400'
-                                                )}
-                                            >
-                                                {zipAndCity || 'N/A'}
-                                            </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="text-xs text-gray-600 dark:text-gray-400">
-                                                Kontaktdaten
-                                            </div>
-                                            <div
-                                                className={cn(
-                                                    !person.email &&
-                                                        'text-gray-400'
-                                                )}
-                                            >
-                                                {person.email || 'N/A'}
-                                            </div>
-                                            <div
-                                                className={cn(
-                                                    !person.phone &&
-                                                        'text-gray-400'
-                                                )}
-                                            >
-                                                {person.phone || 'N/A'}
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-none items-center">
-                                            <ClientContactPersonEditModal
-                                                clientContactPerson={person}
-                                            />
-                                        </div>
-                                    </NewCardItem>
-                                );
-                            })
-                        ) : (
-                            <NewCardItem
-                                className="flex items-center text-gray-500"
-                                last
-                                first
-                            >
-                                Keine Ansprechpartner vorhanden.
-                            </NewCardItem>
-                        )}
-                    </NewCardBody>
-                </NewCard>
-                <NewCard>
-                    <NewCardHeader className="flex items-center justify-between">
-                        <span>Anschrift</span>
-
-                        <ClientAddressEditModal client={client} />
-                    </NewCardHeader>
-                    <NewCardBody>
-                        <NewCardItem
-                            className="flex-gap-2 flex justify-between"
-                            first
-                        >
+                        <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
-                                title="Straße & Hausnummer"
-                                value={client?.street}
-                                content={client?.street}
+                                title="Phone 1"
+                                value={interpreter?.phone1}
+                                content={interpreter?.phone1}
                             />
                             <NewCardItemData
-                                title="Postleitzahl"
-                                value={client?.zip}
-                                content={client?.zip}
+                                title="Phone 2"
+                                value={interpreter?.phone2}
+                                content={interpreter?.phone2}
+                            />
+                        </NewCardItem>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Geburtsdatum"
+                                value={!!interpreter?.birthDate}
+                                content={format(
+                                    interpreter.birthDate!,
+                                    'dd.MM.yyyy'
+                                )}
+                            />
+                            <NewCardItemData
+                                title="Vorstellungsgespräch"
+                                value={!!interpreter?.interviewDate}
+                                content={format(
+                                    interpreter.interviewDate!,
+                                    'dd.MM.yyyy'
+                                )}
                             />
                         </NewCardItem>
                         <NewCardItem
@@ -229,77 +116,140 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                             last
                         >
                             <NewCardItemData
-                                title="Ort"
-                                value={client?.city?.name}
-                                content={client?.city?.name}
+                                title="Startdatum"
+                                value={!!interpreter?.startDate}
+                                content={format(
+                                    interpreter.startDate!,
+                                    'dd.MM.yyyy'
+                                )}
+                            />
+                            <NewCardItemData
+                                title="Enddatum"
+                                value={!!interpreter?.endDate}
+                                content={format(
+                                    interpreter.endDate!,
+                                    'dd.MM.yyyy'
+                                )}
                             />
                         </NewCardItem>
                     </NewCardBody>
                 </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
-                        <span>Systemdaten</span>
+                        <span>Adresse</span>
                     </NewCardHeader>
                     <NewCardBody>
-                        <NewCardItem
-                            first
-                            className="flex-gap-2 flex items-center justify-between"
-                        >
+                        <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
-                                title="id"
-                                value={client.id}
-                                content={
-                                    <div className="flex items-center justify-between">
-                                        {client.id}
-                                        <CopyButton
-                                            copyText={client?.id || ''}
-                                        />
-                                    </div>
+                                title="Bietet Vorort"
+                                value={interpreter?.offersRemote}
+                                content={<HiCheck />}
+                            />
+                            <NewCardItemData
+                                title="Bietet Online"
+                                value={interpreter?.offersOnSite}
+                                content={<HiCheck />}
+                            />
+                        </NewCardItem>
+                        {interpreter.offersOnSite && (
+                            <NewCardItem className="flex-gap-2 flex justify-between">
+                                <NewCardItemData
+                                    title="Einsatzstädte"
+                                    value={
+                                        interpreter?.preferredCities.length > 0
+                                    }
+                                    content={interpreter.preferredCities
+                                        .flatMap(city => city.city.name)
+                                        .join(', ')}
+                                />
+                            </NewCardItem>
+                        )}
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Auto verfügbar"
+                                value={interpreter?.car}
+                                content={<HiCheck />}
+                            />
+                            <NewCardItemData
+                                title="Gewünschte Zeiten"
+                                value={interpreter?.availability}
+                                content={interpreter?.availability}
+                            />
+                        </NewCardItem>
+                    </NewCardBody>
+                </NewCard>
+                <NewCard>
+                    <NewCardHeader className="flex items-center justify-between">
+                        <span>Adresse</span>
+                    </NewCardHeader>
+                    <NewCardBody>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Straße & Hausnummer"
+                                value={interpreter?.street}
+                                content={interpreter?.street}
+                            />
+                            <NewCardItemData
+                                title="Postleitzahl"
+                                value={interpreter?.zip}
+                                content={interpreter?.zip}
+                            />
+                        </NewCardItem>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="City"
+                                value={interpreter?.city?.name}
+                                content={interpreter?.city?.name}
+                            />
+                        </NewCardItem>
+                    </NewCardBody>
+                </NewCard>
+                <NewCard>
+                    <NewCardHeader className="flex items-center justify-between">
+                        <span>Rechnungsdaten</span>
+                    </NewCardHeader>
+                    <NewCardBody>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Stundensatz"
+                                value={
+                                    !!(
+                                        interpreter?.defaultHourlyRate &&
+                                        interpreter.defaultHourlyRate > 0
+                                    )
                                 }
+                                content={interpreter?.defaultHourlyRate + ' €'}
+                            />
+                            <NewCardItemData
+                                title="KM Pauschale"
+                                value={
+                                    !!(
+                                        interpreter?.kmRate &&
+                                        interpreter.kmRate > 0
+                                    )
+                                }
+                                content={interpreter?.kmRate + ' €'}
                             />
                         </NewCardItem>
-
                         <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
-                                title="Erstellt am"
-                                value={String(client?.createdAt)}
-                                content={format(
-                                    client.createdAt,
-                                    'dd.MM.yyyy HH:mm:ss'
-                                )}
-                            />
-                            <NewCardItemData
-                                title="Erstellt von"
-                                value={client?.creatorId}
-                                content={client?.creatorId}
-                            />
-                        </NewCardItem>
-
-                        <NewCardItem className="flex-gap-2 flex justify-between">
-                            <NewCardItemData
-                                title="Aktualisiert am"
-                                value={String(client?.updatedAt)}
-                                content={format(
-                                    client.updatedAt,
-                                    'dd.MM.yyyy HH:mm:ss'
-                                )}
-                            />
-                            <NewCardItemData
-                                title="Aktualisiert von"
-                                value={client?.updatorId}
-                                content={client?.updatorId}
+                                title="Iban"
+                                value={interpreter?.iban}
+                                content={interpreter?.iban}
                             />
                         </NewCardItem>
                     </NewCardBody>
                 </NewCard>
             </NewCardContainer>
-
             <NewCardContainer className="md:col-span-2">
                 <NewCard>
                     <NewCardHeader>Verlauf</NewCardHeader>
 
                     <NewCardBody>
-                        {client.clientHistory &&
+                        <NewCardItem>
+                            Keine Verlaufsdaten vorhanden.
+                        </NewCardItem>
+                        {/* {client.clientHistory &&
                         client.clientHistory.length > 0 ? (
                             client.clientHistory.map(history => (
                                 <NewCardItem
@@ -382,7 +332,7 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItem last first className="text-gray-500">
                                 Keine Verlaufsdaten vorhanden.
                             </NewCardItem>
-                        )}
+                        )} */}
                     </NewCardBody>
                 </NewCard>
             </NewCardContainer>
@@ -390,4 +340,4 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
     );
 };
 
-export default ClientEditPage;
+export default InterpreterEditPage;

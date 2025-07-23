@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ClientPage = () => {
-    return <>client page</>;
+    return <>interpreter page</>;
 };
 
 export default ClientPage;

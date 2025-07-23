@@ -47,3 +47,27 @@ export type TJobFullOverview = Prisma.JobGetPayload<{
         jobMode: true;
     };
 }>;
+
+export type TInterpreterWithStatus = Prisma.InterpreterGetPayload<{
+    include: {
+        status: true;
+    };
+}>;
+
+export type TInterpreterFullOverview = Prisma.InterpreterGetPayload<{
+    include: {
+        city: true;
+        languages: {
+            include: {
+                language: true;
+            };
+        };
+        preferredCities: {
+            include: {
+                city: true;
+            };
+        };
+        status: true;
+        jobs: true;
+    };
+}>;
