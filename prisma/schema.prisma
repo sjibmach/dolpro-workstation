@@ -317,19 +317,19 @@ model InterpreterLanguage {
 }
 
 model Job {
-    id                     String             @id @default(cuid())
+    id                     String               @id @default(cuid())
     clientId               String
-    client                 Client             @relation(fields: [clientId], references: [id])
+    client                 Client               @relation(fields: [clientId], references: [id])
     interpreterId          String?
-    interpreter            Interpreter?       @relation(fields: [interpreterId], references: [id])
+    interpreter            Interpreter?         @relation(fields: [interpreterId], references: [id])
     languageToId           String
-    languageTo             Language           @relation("JobToLanguage", fields: [languageToId], references: [id])
+    languageTo             Language             @relation("JobToLanguage", fields: [languageToId], references: [id])
     jobTypeId              String?
-    jobType                JobType?           @relation(fields: [jobTypeId], references: [id])
-    priorityId             String?            @default("medium")
-    priority               JobPriority?       @relation(fields: [priorityId], references: [id])
+    jobType                JobType?             @relation(fields: [jobTypeId], references: [id])
+    priorityId             String?              @default("medium")
+    priority               JobPriority?         @relation(fields: [priorityId], references: [id])
     statusId               String
-    status                 JobStatus          @relation(fields: [statusId], references: [id])
+    status                 JobStatus            @relation(fields: [statusId], references: [id])
     description            String?
     jobDate                DateTime?
     startTime              String?
@@ -338,7 +338,7 @@ model Job {
     addressStreet          String?
     addressZip             String?
     addressCityId          String?
-    addressCity            City?              @relation(fields: [addressCityId], references: [id])
+    addressCity            City?                @relation(fields: [addressCityId], references: [id])
     fee                    Float?
     interpreterFee         Float?
     code                   String
@@ -356,13 +356,15 @@ model Job {
     notes                  String?
     creatorId              String?
     updatorId              String?
-    createdAt              DateTime           @default(now())
-    updatedAt              DateTime           @updatedAt
+    createdAt              DateTime             @default(now())
+    updatedAt              DateTime             @updatedAt
     jobContactperson       JobContactperson[]
-    jobMode                JobMode?           @relation(fields: [jobModeId], references: [id])
+    jobMode                JobMode?             @relation(fields: [jobModeId], references: [id])
     jobModeId              String?
-    isConfirmedInterpreter Boolean            @default(false)
-    isConfirmedClient      Boolean            @default(false)
+    isConfirmedInterpreter Boolean              @default(false)
+    isConfirmedClient      Boolean              @default(false)
+    jobCompletionStatus    JobCompletionStatus? @relation(fields: [jobCompletionStatusId], references: [id])
+    jobCompletionStatusId  String?
 
     @@map("jobs")
 }
@@ -385,6 +387,16 @@ model JobStatus {
     jobs      Job[]
 
     @@map("job_statuses")
+}
+
+model JobCompletionStatus {
+    id        String  @id @default(cuid())
+    name      String
+    active    Boolean @default(true)
+    sortIndex Int?
+    jobs      Job[]
+
+    @@map("job_completion_statuses")
 }
 
 model JobContactperson {

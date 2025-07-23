@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { ReactNode } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export type paramsType = Promise<{ jobId: string }>;
 
 const JobIdLayout = async ({

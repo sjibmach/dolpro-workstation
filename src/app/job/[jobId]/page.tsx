@@ -9,12 +9,10 @@ import {
     NewCardItem,
     NewCardItemData,
 } from '@/components/custom-ui/new-card';
-import {
-    differenceInCalendarDays,
-    differenceInMinutes,
-    format,
-} from 'date-fns';
+import { differenceInCalendarDays, format } from 'date-fns';
 import JobDateConfirmation from './_components/job-date-confirmation';
+
+export const dynamic = 'force-dynamic';
 
 export type paramsType = Promise<{ jobId: string }>;
 

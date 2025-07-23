@@ -2,16 +2,17 @@ import { Metadata } from 'next';
 
 import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
-import { tasks } from './data/tasks';
 import { prisma } from '@/lib/prisma';
 import { TJobTable } from './data/schema';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'Aufträge',
     description: 'Hier wird eine Liste von Aufträgen angezeigt.',
 };
 
-export default async function TaskPage() {
+export default async function JobsPage() {
     const jobs = await prisma.job.findMany({
         select: {
             id: true,

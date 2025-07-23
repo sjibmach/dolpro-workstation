@@ -4,6 +4,8 @@ import { TClientWithStatus } from '@/lib/prismaTypes';
 import { prisma } from '@/lib/prisma';
 import ClientsSidetable from '@/components/sidetables/clients-sidetable';
 
+export const dynamic = 'force-dynamic';
+
 const ClientLayout = async ({ children }: { children: ReactNode }) => {
     const clients: TClientWithStatus[] = await prisma.client.findMany({
         orderBy: { createdAt: 'desc' },

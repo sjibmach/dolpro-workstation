@@ -19,6 +19,8 @@ import { ClientContactPersonEditModal } from '@/components/modals/app-modals/cli
 import { ClientHistroyAddForm } from '../_components/client-history-add-form';
 import { Badge } from '@/components/ui/badge';
 
+export const dynamic = 'force-dynamic';
+
 export type paramsType = Promise<{ clientId: string }>;
 
 const ClientEditPage = async ({ params }: { params: paramsType }) => {

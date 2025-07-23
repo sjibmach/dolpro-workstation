@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 import { ClientTabList } from './_components/clients-tab-list';
 import { prisma } from '@/lib/prisma';
-import { clientStatusIsNotInterested } from '@/lib/prismaEnums';
+
+export const dynamic = 'force-dynamic';
 
 export type paramsType = Promise<{ clientId: string }>;
 
