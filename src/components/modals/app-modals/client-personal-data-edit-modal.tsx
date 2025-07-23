@@ -14,7 +14,7 @@ import { PiFeather } from 'react-icons/pi';
 import { Client } from '@prisma/client';
 import { useState } from 'react';
 import {
-    useQueryClientStatuses,
+    useQueryInterpreterStatuses,
     useQueryClientTypes,
 } from '@/hooks/react-query/react-query-hooks';
 
@@ -68,7 +68,7 @@ export function ClientPersonalDataEditModal({
         useQueryClientTypes();
 
     const { data: clientStatuses, isLoading: isLoadingClientStatuses } =
-        useQueryClientStatuses();
+        useQueryInterpreterStatuses();
 
     const form = useForm<TClientPersonalDataEdit>({
         resolver: zodResolver(ClientPersonDataEditSchema),

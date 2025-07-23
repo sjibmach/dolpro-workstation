@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import {
     useQueryCities,
-    useQueryClientStatuses,
+    useQueryInterpreterStatuses,
     useQueryClientTypes,
 } from '@/hooks/react-query/react-query-hooks';
 
@@ -67,7 +67,7 @@ export function ClientAddModal() {
         useQueryClientTypes();
 
     const { data: clientStatuses, isLoading: isLoadingClientStatuses } =
-        useQueryClientStatuses();
+        useQueryInterpreterStatuses();
 
     const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 

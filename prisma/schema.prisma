@@ -106,16 +106,16 @@ model Client {
     cityId             String?
     city               City?                 @relation(fields: [cityId], references: [id])
     notes              String?
-    creatorId          String?
-    creator            User?                 @relation("CreatedClients", fields: [creatorId], references: [id])
-    updatorId          String?
-    updator            User?                 @relation("UpdatedClients", fields: [updatorId], references: [id])
-    createdAt          DateTime              @default(now())
-    updatedAt          DateTime              @updatedAt
     jobs               Job[]
     contactPersons     ClientContactperson[]
     clientHistory      ClientHistory[]
-    testerId           String? // optional, for testing purposes
+
+    creatorId String?
+    creator   User?    @relation("CreatedClients", fields: [creatorId], references: [id])
+    updatorId String?
+    updator   User?    @relation("UpdatedClients", fields: [updatorId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("clients")
 }
@@ -253,26 +253,30 @@ model Interpreter {
     id                String                     @id @default(cuid())
     code              String                     @unique
     codeNumber        Int                        @unique
-    firstName         String
+    firstName         String?
     lastName          String
     email             String?
-    phone             String?
+    phone1            String?
+    phone2            String?
     gender            String?
     birthDate         DateTime?
     street            String?
     zip               String?
-    city              String?
-    offersRemote      Boolean
-    offersOnSite      Boolean
+    cityId            String?
+    city              City?                      @relation(fields: [cityId], references: [id])
+    offersRemote      Boolean?                   @default(false)
+    offersOnSite      Boolean?                   @default(false)
     defaultHourlyRate Float?
+    kmRate            Float?
     availability      String?
+    car               Boolean?                   @default(false)
     iban              String?
     startDate         DateTime?
     endDate           DateTime?
     interviewDate     DateTime?
     googleContactId   String?
     googleEventId     String?
-    statusId          String
+    statusId          String                     @default("new")
     status            InterpreterStatus          @relation(fields: [statusId], references: [id])
     notes             String?
     createdAt         DateTime                   @default(now())
@@ -280,8 +284,6 @@ model Interpreter {
     preferredCities   InterpreterPreferredCity[]
     languages         InterpreterLanguage[]
     jobs              Job[]
-    City              City?                      @relation(fields: [cityId], references: [id])
-    cityId            String?
 
     @@map("interpreters")
 }

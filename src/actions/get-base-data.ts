@@ -63,3 +63,8 @@ export const getClientsForAddingJobs = async () => {
     });
     return result;
 };
+
+export const getInterpreterStatuses = async () => {
+    const result = await prisma.interpreterStatus.findMany();
+    return result.sort(sortBySortIndex);
+};

@@ -33,10 +33,10 @@ export const navigation = [
     },
     {
         name: 'Dolmetscher',
-        href: '/interpreters',
+        href: '/interpreter',
         icon: HiLanguage,
         current: (pathname: string | null) =>
-            pathname?.startsWith('/interpreters'),
+            pathname?.startsWith('/interpreter'),
     },
     {
         name: 'Auftraggeber',

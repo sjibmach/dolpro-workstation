@@ -4,6 +4,9 @@ import {
     ClientStatus,
     ClientStatusReason,
     ClientType,
+    InterpreterLanguage,
+    InterpreterPreferredCity,
+    InterpreterStatus,
     JobPriority,
     JobStatus,
     JobType,
@@ -90,6 +93,16 @@ export const useQueryClientsForAddingJobs = () => {
         queryKey: ['clients-for-adding-jobs'],
         queryFn: async () =>
             fetch('/api/base-data/clients-for-adding-jobs').then(res =>
+                res.json()
+            ),
+    });
+};
+
+export const useQueryInterpreterStatuses = () => {
+    return useQuery<InterpreterStatus[]>({
+        queryKey: ['interpreter-statuses'],
+        queryFn: async () =>
+            fetch('/api/base-data/interpreter-statuses').then(res =>
                 res.json()
             ),
     });
