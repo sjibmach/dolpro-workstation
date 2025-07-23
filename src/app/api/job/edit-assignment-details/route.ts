@@ -1,4 +1,3 @@
-import { TJobDateConfirmation } from '@/app/job/[jobId]/_components/job-date-confirmation';
 import { TJobAssignmenDetailsEditModal } from '@/components/modals/app-modals/job-assignment-details-edit-modal';
 import { prisma } from '@/lib/prisma';
 import { IdentificationIcon } from '@heroicons/react/24/outline';

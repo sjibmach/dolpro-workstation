@@ -99,7 +99,7 @@ export function InterpreterAddModal() {
         resolver: zodResolver(InterpreterAddSchema),
         defaultValues: {
             firstName: '',
-            lastName: 'Mustermann',
+            lastName: '',
             email: '',
             phone1: '',
             phone2: '',
