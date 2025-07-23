@@ -301,7 +301,7 @@ model InterpreterStatus {
 model InterpreterPreferredCity {
     id            String      @id @default(cuid())
     interpreterId String
-    interpreter   Interpreter @relation(fields: [interpreterId], references: [id])
+    interpreter   Interpreter @relation(fields: [interpreterId], references: [id], onDelete: Cascade)
     cityId        String
     city          City        @relation(fields: [cityId], references: [id])
 
@@ -311,7 +311,7 @@ model InterpreterPreferredCity {
 model InterpreterLanguage {
     id            String      @id @default(cuid())
     interpreterId String
-    interpreter   Interpreter @relation(fields: [interpreterId], references: [id])
+    interpreter   Interpreter @relation(fields: [interpreterId], references: [id], onDelete: Cascade)
     languageId    String
     language      Language    @relation(fields: [languageId], references: [id])
 
