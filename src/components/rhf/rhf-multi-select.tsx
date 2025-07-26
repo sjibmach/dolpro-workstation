@@ -1,28 +1,14 @@
 'use client';
 
-import Link from 'next/link';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Control, useForm, UseFormSetValue } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Control, UseFormSetValue } from 'react-hook-form';
 
-import { Button } from '@/components/ui/button';
 import {
-    Form,
-    FormControl,
     FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { TIdAndNameObject } from '@/lib/types';
 import { MultiSelect } from '../ui/multi-select';
 
@@ -53,14 +39,10 @@ export function RHFMultiSelect({
                 <FormItem>
                     {label && <FormLabel>{label}</FormLabel>}
                     <MultiSelect
+                        defaultValue={field.value}
                         options={options}
                         onValueChange={value => {
-                            setValue(
-                                name,
-                                value.map(v => ({
-                                    id: v,
-                                }))
-                            );
+                            setValue(name, value);
                         }}
                     />
                     {description && (

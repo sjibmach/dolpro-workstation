@@ -73,11 +73,8 @@ const InterpreterAddSchema = z.object({
         })
     ),
 
-    preferredCities: z.array(
-        z.object({
-            id: z.string(),
-        })
-    ),
+    preferredCities: z.array(z.string()),
+
     statusId: z.string(),
 });
 

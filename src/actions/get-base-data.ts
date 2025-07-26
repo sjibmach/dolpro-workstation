@@ -84,7 +84,5 @@ export const getInterpretersForJobs = async () => {
         name: `${interpreter.code} - ${interpreter.firstName} ${interpreter.lastName}`,
     }));
 
-    console.log('convertedToName', convertedToName);
-
     return convertedToName;
 };

@@ -11,6 +11,8 @@ import {
 import { TInterpreterFullOverview } from '@/lib/prismaTypes';
 import { format } from 'date-fns';
 import { HiCheck } from 'react-icons/hi2';
+import { InterpreterPersonalDataEditModal } from '@/components/modals/app-modals/interpreter-personal-data-edit-modal';
+import { InterpreterAvailabilityEditModal } from '@/components/modals/app-modals/interpreter-availability-edit-modal';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,6 +51,9 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Persönliche Daten</span>
+                        <InterpreterPersonalDataEditModal
+                            interpreter={interpreter}
+                        />
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
@@ -93,7 +98,10 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 content={interpreter?.phone2}
                             />
                         </NewCardItem>
-                        <NewCardItem className="flex-gap-2 flex justify-between">
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
                             <NewCardItemData
                                 title="Geburtsdatum"
                                 value={!!interpreter?.birthDate}
@@ -111,32 +119,14 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 )}
                             />
                         </NewCardItem>
-                        <NewCardItem
-                            className="flex-gap-2 flex justify-between"
-                            last
-                        >
-                            <NewCardItemData
-                                title="Startdatum"
-                                value={!!interpreter?.startDate}
-                                content={format(
-                                    interpreter.startDate!,
-                                    'dd.MM.yyyy'
-                                )}
-                            />
-                            <NewCardItemData
-                                title="Enddatum"
-                                value={!!interpreter?.endDate}
-                                content={format(
-                                    interpreter.endDate!,
-                                    'dd.MM.yyyy'
-                                )}
-                            />
-                        </NewCardItem>
                     </NewCardBody>
                 </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Verfügbarkeit</span>
+                        <InterpreterAvailabilityEditModal
+                            interpreter={interpreter}
+                        />
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
@@ -164,10 +154,7 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 />
                             </NewCardItem>
                         )}
-                        <NewCardItem
-                            className="flex-gap-2 flex justify-between"
-                            last
-                        >
+                        <NewCardItem className="flex-gap-2 flex justify-between">
                             <NewCardItemData
                                 title="Auto verfügbar"
                                 value={interpreter?.car}
@@ -177,6 +164,27 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 title="Gewünschte Zeiten"
                                 value={interpreter?.availability}
                                 content={interpreter?.availability}
+                            />
+                        </NewCardItem>
+                        <NewCardItem
+                            className="flex-gap-2 flex justify-between"
+                            last
+                        >
+                            <NewCardItemData
+                                title="Startdatum"
+                                value={!!interpreter?.startDate}
+                                content={format(
+                                    interpreter.startDate!,
+                                    'dd.MM.yyyy'
+                                )}
+                            />
+                            <NewCardItemData
+                                title="Enddatum"
+                                value={!!interpreter?.endDate}
+                                content={format(
+                                    interpreter.endDate!,
+                                    'dd.MM.yyyy'
+                                )}
                             />
                         </NewCardItem>
                     </NewCardBody>

@@ -111,8 +111,8 @@ export async function POST(req: Request) {
 
                 preferredCities: {
                     createMany: {
-                        data: preferredCities.map(city => ({
-                            cityId: city.id,
+                        data: preferredCities.map(cityId => ({
+                            cityId,
                         })),
                     },
                 },
