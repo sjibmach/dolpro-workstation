@@ -78,6 +78,8 @@ model User {
     updatedClients         Client[]        @relation("UpdatedClients")
     creatorClientHistories ClientHistory[] @relation("CreatorClientHistories")
     updatorClientHistories ClientHistory[] @relation("UpdatorClientHistories")
+    creatorJob             Job[]           @relation("CreatorJob")
+    updatorJob             Job[]           @relation("UpdatorJob")
 
     @@map("users")
 }
@@ -110,12 +112,13 @@ model Client {
     contactPersons     ClientContactperson[]
     clientHistory      ClientHistory[]
 
+    createdAt DateTime @default(now())
     creatorId String?
     creator   User?    @relation("CreatedClients", fields: [creatorId], references: [id])
+
+    updatedAt DateTime @updatedAt
     updatorId String?
     updator   User?    @relation("UpdatedClients", fields: [updatorId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 
     @@map("clients")
 }
@@ -234,13 +237,13 @@ model ClientHistory {
     followUpDate DateTime? // Wiedervorlage, z. B. bei „später kontaktieren“
     note         String? // Freitext-Eintrag
 
-    creatorId String?
-    updatorId String?
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    creatorId String?
+    creator   User?    @relation("CreatorClientHistories", fields: [creatorId], references: [id])
 
-    creator User? @relation("CreatorClientHistories", fields: [creatorId], references: [id])
-    updator User? @relation("UpdatorClientHistories", fields: [updatorId], references: [id])
+    updatorId String?
+    updator   User?    @relation("UpdatorClientHistories", fields: [updatorId], references: [id])
+    updatedAt DateTime @updatedAt
 
     @@map("client_histories")
 }
@@ -356,10 +359,6 @@ model Job {
     finalPriceInterpreter  Float?
     invoiceAddress         String?
     notes                  String?
-    creatorId              String?
-    updatorId              String?
-    createdAt              DateTime             @default(now())
-    updatedAt              DateTime             @updatedAt
     jobContactperson       JobContactperson[]
     jobMode                JobMode?             @relation(fields: [jobModeId], references: [id])
     jobModeId              String?
@@ -367,6 +366,14 @@ model Job {
     isConfirmedClient      Boolean              @default(false)
     jobCompletionStatus    JobCompletionStatus? @relation(fields: [jobCompletionStatusId], references: [id])
     jobCompletionStatusId  String?
+
+    createdAt DateTime @default(now())
+    creatorId String?
+    creator   User?    @relation("CreatorJob", fields: [creatorId], references: [id])
+
+    updatedAt DateTime @updatedAt
+    updatorId String?
+    updator   User?    @relation("UpdatorJob", fields: [updatorId], references: [id])
 
     @@map("jobs")
 }
