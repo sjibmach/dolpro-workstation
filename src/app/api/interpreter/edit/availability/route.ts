@@ -1,10 +1,9 @@
 import { TInterpreterAvailabilityEdit } from '@/components/modals/app-modals/interpreter-availability-edit-modal';
-import { TInterpreterPersonalDataEdit } from '@/components/modals/app-modals/interpreter-personal-data-edit-modal';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    console.log('-----------------INTERPRETER EDIT PERSONAL DATA------------');
+    console.log('-----------------INTERPRETER EDIT AVAILABILTY------------');
     const body: TInterpreterAvailabilityEdit = await req.json();
 
     const {

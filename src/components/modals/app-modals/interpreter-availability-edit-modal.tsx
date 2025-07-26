@@ -12,7 +12,6 @@ import { toast } from 'sonner';
 import { PiFeather } from 'react-icons/pi';
 import { useState } from 'react';
 import { TInterpreterFullOverview } from '@/lib/prismaTypes';
-import { RHFSelect } from '@/components/rhf/rhf-select';
 import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 import { TIdAndNameObject } from '@/lib/types';
 import { RHFMultiSelect } from '@/components/rhf/rhf-multi-select';
@@ -152,7 +151,6 @@ export function InterpreterAvailabilityEditModal({
                             )}
                         </div>
                     )}
-
                     <div className="col-span-full mb-8">
                         <RHFTextArea
                             name="availability"
@@ -166,7 +164,6 @@ export function InterpreterAvailabilityEditModal({
                         label="Startdatum"
                         type="date"
                     />
-
                     <RHFInput
                         name="endDate"
                         control={form.control}

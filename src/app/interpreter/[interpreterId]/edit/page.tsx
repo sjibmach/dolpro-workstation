@@ -10,9 +10,11 @@ import {
 } from '@/components/custom-ui/new-card';
 import { TInterpreterFullOverview } from '@/lib/prismaTypes';
 import { format } from 'date-fns';
-import { HiCheck } from 'react-icons/hi2';
+import { HiCheck, HiCheckCircle, HiOutlineCheckCircle } from 'react-icons/hi2';
 import { InterpreterPersonalDataEditModal } from '@/components/modals/app-modals/interpreter-personal-data-edit-modal';
 import { InterpreterAvailabilityEditModal } from '@/components/modals/app-modals/interpreter-availability-edit-modal';
+import { InterpreterAddressEditModal } from '@/components/modals/app-modals/interpreter-address-edit-modal';
+import { InterpreterBillingEditModal } from '@/components/modals/app-modals/interpreter-billing-edit-modal';
 
 export const dynamic = 'force-dynamic';
 
@@ -133,12 +135,22 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItemData
                                 title="Bietet Vorort"
                                 value={interpreter?.offersRemote}
-                                content={<HiCheck />}
+                                content={
+                                    <HiOutlineCheckCircle
+                                        className="text-emerald-500"
+                                        size={22}
+                                    />
+                                }
                             />
                             <NewCardItemData
                                 title="Bietet Online"
                                 value={interpreter?.offersOnSite}
-                                content={<HiCheck />}
+                                content={
+                                    <HiOutlineCheckCircle
+                                        className="text-emerald-500"
+                                        size={22}
+                                    />
+                                }
                             />
                         </NewCardItem>
                         {interpreter.offersOnSite && (
@@ -158,7 +170,12 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItemData
                                 title="Auto verfügbar"
                                 value={interpreter?.car}
-                                content={<HiCheck />}
+                                content={
+                                    <HiOutlineCheckCircle
+                                        className="text-emerald-500"
+                                        size={22}
+                                    />
+                                }
                             />
                             <NewCardItemData
                                 title="Gewünschte Zeiten"
@@ -192,6 +209,9 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Adresse</span>
+                        <InterpreterAddressEditModal
+                            interpreter={interpreter}
+                        />
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
@@ -221,6 +241,9 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Rechnungsdaten</span>
+                        <InterpreterBillingEditModal
+                            interpreter={interpreter}
+                        />
                     </NewCardHeader>
                     <NewCardBody>
                         <NewCardItem className="flex-gap-2 flex justify-between">
@@ -245,14 +268,21 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                                 content={interpreter?.kmRate + ' €'}
                             />
                         </NewCardItem>
+                        <NewCardItem className="flex-gap-2 flex justify-between">
+                            <NewCardItemData
+                                title="Iban"
+                                value={interpreter?.iban}
+                                content={interpreter?.iban}
+                            />
+                        </NewCardItem>
                         <NewCardItem
                             className="flex-gap-2 flex justify-between"
                             last
                         >
                             <NewCardItemData
-                                title="Iban"
-                                value={interpreter?.iban}
-                                content={interpreter?.iban}
+                                title="Notizen"
+                                value={interpreter?.notes}
+                                content={interpreter?.notes}
                             />
                         </NewCardItem>
                     </NewCardBody>
