@@ -14,6 +14,7 @@ const ClientDeleteAlertModal = ({ clientId }: { clientId: string }) => {
             loading: 'Lösche Auftraggeber...',
             success: 'Auftraggeber erfolgreich gelöscht',
             error: 'Fehler beim Löschen des Auftraggebers',
+            position: 'top-center',
         });
 
         try {

@@ -111,6 +111,7 @@ export function JobAddModal() {
             loading: 'Auftrag wird hinzugefügt...',
             success: 'Auftrag erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen des Auftrags',
+            position: 'top-center',
         });
 
         try {

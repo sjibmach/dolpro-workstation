@@ -59,6 +59,8 @@ export function ClientAddressEditModal({
             loading: 'Auftragsgeber wird aktualisiert...',
             success: 'Auftragsgeber erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren des Auftragsgebers',
+            position: 'top-center',
+
         });
 
         try {

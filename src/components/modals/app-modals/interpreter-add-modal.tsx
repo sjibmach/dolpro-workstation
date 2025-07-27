@@ -133,6 +133,8 @@ export function InterpreterAddModal() {
             loading: 'Dolmetscher wird hinzugefügt...',
             success: 'Dolmetscher erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen des Dolmetschers',
+            position: 'top-center',
+
         });
 
         try {

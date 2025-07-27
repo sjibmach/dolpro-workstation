@@ -65,7 +65,7 @@ const InterpretersSidetable = ({
                                     )}
                                 >
                                     <div className="flex w-full flex-col justify-between">
-                                        <div className="flex items-center justify-between">
+                                        <div className="flex flex-wrap items-center gap-x-1">
                                             <span className="text-sm">
                                                 {interpreter.code
                                                     ? interpreter.code
@@ -76,6 +76,14 @@ const InterpretersSidetable = ({
                                                     : ''}
                                                 {interpreter.lastName}
                                             </span>
+                                            {interpreter.statusId && (
+                                                <Badge
+                                                    className="text-xs"
+                                                    variant="secondary"
+                                                >
+                                                    {interpreter?.status?.name}
+                                                </Badge>
+                                            )}
                                             {/* <DropdownMenu>
                                                 <DropdownMenuTrigger
                                                     asChild
@@ -106,14 +114,14 @@ const InterpretersSidetable = ({
                                                 </DropdownMenuContent>
                                             </DropdownMenu> */}
                                         </div>
-                                        {interpreter.statusId && (
+                                        {/* {interpreter.statusId && (
                                             <Badge
                                                 className="text-xs"
                                                 variant="secondary"
                                             >
                                                 {interpreter?.status?.name}
                                             </Badge>
-                                        )}
+                                        )} */}
                                     </div>
                                 </NewCardItem>
                             </Link>

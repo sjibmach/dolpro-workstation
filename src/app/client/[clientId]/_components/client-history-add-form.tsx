@@ -101,6 +101,7 @@ export function ClientHistroyAddForm({ client }: { client: Client }) {
             loading: 'Historie wird hinzugefügt...',
             success: 'Historie erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen der Historie',
+            position: 'top-center',
         });
 
         try {

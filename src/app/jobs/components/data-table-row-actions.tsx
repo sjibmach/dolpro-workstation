@@ -12,8 +12,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { jobTableSchema } from '../data/schema';
-
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
 }
@@ -21,7 +19,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
     row,
 }: DataTableRowActionsProps<TData>) {
-    const task = jobTableSchema.parse(row.original);
+    const task = row.original;
 
     return (
         <DropdownMenu>

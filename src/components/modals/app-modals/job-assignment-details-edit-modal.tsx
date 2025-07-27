@@ -71,6 +71,7 @@ export function JobAssignmentDetailsEditModal({
             loading: 'Auftragsdetails werden aktualisiert...',
             success: 'Auftragsdetails erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren der Auftragsdetails',
+            position: 'top-center',
         });
 
         try {

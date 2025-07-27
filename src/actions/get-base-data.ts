@@ -87,7 +87,7 @@ export const getInterpretersForJobs = async () => {
 
     const convertedToName = result.map(interpreter => ({
         id: interpreter.id,
-        name: `${interpreter.code} - ${interpreter.firstName} ${interpreter.lastName}`,
+        name: `${interpreter.code} ${interpreter.firstName} ${interpreter.lastName}`,
     }));
 
     return convertedToName;

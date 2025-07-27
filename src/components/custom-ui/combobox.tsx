@@ -17,24 +17,28 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { FormItem, FormLabel } from '../ui/form';
 import { useState } from 'react';
+import { Label } from '../ui/label';
 
 export function Combobox({
     options,
     label,
     placeholder = 'Wähle eine Option',
+    initialValue = '',
+    onChange = () => {},
 }: {
     options: { id: string; name: string }[];
     label?: string;
     placeholder?: string;
+    initialValue: string | null | undefined;
+    onChange?: (v: string) => void;
 }) {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(initialValue);
 
     return (
-        <FormItem>
-            {label && <FormLabel>{label}</FormLabel>}
+        <>
+            {label && <Label>{label}</Label>}
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
@@ -43,14 +47,17 @@ export function Combobox({
                         aria-expanded={open}
                         className="w-[200px] justify-between"
                     >
-                        {value
-                            ? options.find(option => option.id === value)?.name
-                            : 'Select ...'}
+                        <span className="truncate">
+                            {value
+                                ? options.find(option => option.id === value)
+                                      ?.name
+                                : 'Auswählen...'}
+                        </span>
                         <ChevronsUpDown className="opacity-50" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-[200px] p-0"
+                    className="max-w-[200px] p-0"
                     // side="right"
                     align="start"
                 >
@@ -67,6 +74,7 @@ export function Combobox({
                                         key={option.id}
                                         value={option.id}
                                         onSelect={currentValue => {
+                                            onChange(currentValue);
                                             setValue(
                                                 currentValue === value
                                                     ? ''
@@ -75,15 +83,12 @@ export function Combobox({
                                             setOpen(false);
                                         }}
                                     >
-                                        {option.name}
-                                        <Check
-                                            className={cn(
-                                                'ml-auto',
-                                                value === option.id
-                                                    ? 'opacity-100'
-                                                    : 'opacity-0'
-                                            )}
-                                        />
+                                        <span className="truncate">
+                                            {option.name}
+                                        </span>
+                                        {value === option.id && (
+                                            <Check className="ml-auto" />
+                                        )}
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
@@ -91,6 +96,6 @@ export function Combobox({
                     </Command>
                 </PopoverContent>
             </Popover>
-        </FormItem>
+        </>
     );
 }

@@ -53,9 +53,16 @@ async function ClientPage({ params }: { params: paramsType }) {
                     </NewCardHeader>
 
                     <NewCardBody>
+                        <NewCardItem first>
+                            <NewCardItemData
+                                title="Status"
+                                value={job.status.name}
+                                content={job.status.name}
+                            />
+                        </NewCardItem>
                         <NewCardItem
                             className="flex items-center justify-between gap-1"
-                            first
+                            last={!job.interpreterId}
                         >
                             <NewCardItemData
                                 title="Dolmetscher"
@@ -88,19 +95,25 @@ async function ClientPage({ params }: { params: paramsType }) {
                             />
                         </NewCardItem>
                         {job.interpreterId && (
-                            <NewCardItem className="flex items-center justify-between gap-1">
+                            <NewCardItem
+                                className="flex items-center justify-between gap-1"
+                                last
+                            >
                                 <NewCardItemData
                                     title="Bestätigung des Dolmetschers"
                                     value={true}
                                     content={
-                                        <JobDateConfirmation
-                                            title="Bestätigung des Dolmetschers"
-                                            jobId={job.id}
-                                            isConfirmed={job.isConfirmedClient}
-                                            type="interpreter"
-                                        />
+                                        <div className="pr-6">
+                                            <JobDateConfirmation
+                                                title="Bestätigung des Dolmetschers"
+                                                jobId={job.id}
+                                                isConfirmed={
+                                                    job.isConfirmedClient
+                                                }
+                                                type="interpreter"
+                                            />
+                                        </div>
                                     }
-                                    className="pr-10"
                                 />
                                 <NewCardItemData
                                     title="Bestätigung des Auftragsgeber"
@@ -118,13 +131,6 @@ async function ClientPage({ params }: { params: paramsType }) {
                                 />
                             </NewCardItem>
                         )}
-                        <NewCardItem last>
-                            <NewCardItemData
-                                title="Status"
-                                value={job.status.name}
-                                content={job.status.name}
-                            />
-                        </NewCardItem>
                     </NewCardBody>
                 </NewCard>
                 <NewCard>

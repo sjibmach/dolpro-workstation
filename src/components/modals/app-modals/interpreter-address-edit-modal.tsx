@@ -61,6 +61,8 @@ export function InterpreterAddressEditModal({
             loading: 'Dolmetscher wird aktualisiert...',
             success: 'Dolmetscher erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren des Dolmetschers',
+            position: 'top-center',
+
         });
 
         try {

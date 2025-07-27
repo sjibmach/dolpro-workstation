@@ -102,19 +102,7 @@ const RHFCombobox = ({
                             </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="max-w-[300px] overflow-y-auto p-0">
-                            <Command
-                                onKeyDown={e => {
-                                    if (
-                                        creatable &&
-                                        e.key === 'Enter' &&
-                                        query &&
-                                        !exactMatch
-                                    ) {
-                                        e.preventDefault();
-                                        handleCreate();
-                                    }
-                                }}
-                            >
+                            <Command>
                                 <CommandInput
                                     placeholder={placeholder || 'Suchen...'}
                                     className="h-9"

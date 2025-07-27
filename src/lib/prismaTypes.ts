@@ -78,3 +78,17 @@ export type TInterpreterFullOverview = Prisma.InterpreterGetPayload<{
         };
     };
 }>;
+
+export type TJobOverviewTable = Prisma.JobGetPayload<{
+    include: {
+        client: true;
+        interpreter: true;
+        status: true;
+        languageTo: true;
+        addressCity: true;
+        priority: true;
+        jobType: true;
+        jobMode: true;
+        creator: true;
+    };
+}>;

@@ -10,12 +10,11 @@ import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 import { JobAddModal } from '@/components/modals/app-modals/job-add-modal';
 import {
-    useQueryInterpretersForJobs,
+    useQueryClientsForAddingJobs,
     useQueryJobPriorities,
     useQueryJobStatuses,
 } from '@/hooks/react-query/react-query-hooks';
 import { HiArrowRight, HiArrowUp } from 'react-icons/hi2';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -56,7 +55,7 @@ export function DataTableToolbar<TData>({
         useQueryJobStatuses();
 
     const { data: clients, isLoading: isLoadingClients } =
-        useQueryInterpretersForJobs();
+        useQueryClientsForAddingJobs();
 
     const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -77,9 +76,9 @@ export function DataTableToolbar<TData>({
                     }}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
-                {table.getColumn('clientName') && !isLoadingJobStatuses && (
+                {table.getColumn('clientId') && !isLoadingClients && (
                     <DataTableFacetedFilter
-                        column={table.getColumn('clientName')}
+                        column={table.getColumn('clientId')}
                         title="Auftragsgeber"
                         options={clients}
                     />

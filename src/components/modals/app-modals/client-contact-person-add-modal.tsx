@@ -82,6 +82,7 @@ export function ClientContactPersonAddModal({
             loading: 'Kontaktperson wird eingefügt...',
             success: 'Kontaktperson erfolgreich eingefügt',
             error: 'Fehler beim Einfügen der Kontaktperson',
+            position: 'top-center',
         });
 
         try {
