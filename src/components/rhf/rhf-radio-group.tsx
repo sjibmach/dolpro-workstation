@@ -39,7 +39,7 @@ export function RHFRadioGroup({
                                 'flex gap-4',
                                 direction === 'vertical'
                                     ? 'flex-col'
-                                    : 'flex-row'
+                                    : 'flex-row flex-wrap'
                             )}
                         >
                             {options.map(option => (

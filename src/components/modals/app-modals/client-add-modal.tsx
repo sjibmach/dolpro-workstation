@@ -95,7 +95,7 @@ export function ClientAddModal() {
             loading: 'Kunde wird hinzugefügt...',
             success: 'Kunde erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen des Kunden',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

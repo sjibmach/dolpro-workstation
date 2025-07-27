@@ -13,12 +13,7 @@ import {
     useQueryClientStatusReasons,
     useQueryClientStatuses,
 } from '@/hooks/react-query/react-query-hooks';
-import {
-    NewCard,
-    NewCardBody,
-    NewCardHeader,
-    NewCardItem,
-} from '@/components/custom-ui/new-card';
+import { NewCardItem } from '@/components/custom-ui/new-card';
 import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 import { Button } from '@/components/ui/button';
 import { Client } from '@prisma/client';
@@ -101,7 +96,7 @@ export function ClientHistroyAddForm({ client }: { client: Client }) {
             loading: 'Historie wird hinzugefügt...',
             success: 'Historie erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen der Historie',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {
@@ -115,92 +110,87 @@ export function ClientHistroyAddForm({ client }: { client: Client }) {
     };
 
     return (
-        <NewCard>
-            <NewCardHeader>Bearbeiten</NewCardHeader>
-            <NewCardBody>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <NewCardItem
-                            className="grid gap-x-2 gap-y-4 sm:grid-cols-2"
-                            last
-                            first
-                        >
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+                <NewCardItem
+                    className="grid gap-x-2 gap-y-4 sm:grid-cols-2"
+                    last
+                    first
+                >
+                    <div>
+                        <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                            Status
+                        </div>
+                        <RHFCombobox
+                            name="statusId"
+                            control={form.control}
+                            options={clientStatuses || []}
+                            setValue={form.setValue}
+                            placeholder="Status auswählen"
+                            showError
+                        />
+                    </div>
+                    {(statusId === 'notInterested' ||
+                        statusId === 'blacklisted') && (
+                        <div>
+                            <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                                Status Grund
+                            </div>
                             <div>
-                                <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                    Status
-                                </div>
                                 <RHFCombobox
-                                    name="statusId"
+                                    name="statusReasonId"
                                     control={form.control}
-                                    options={clientStatuses || []}
+                                    options={clientStatusReasons || []}
                                     setValue={form.setValue}
-                                    placeholder="Status auswählen"
+                                    placeholder="Status Grund auswählen"
                                     showError
                                 />
                             </div>
-                            {(statusId === 'notInterested' ||
-                                statusId === 'blacklisted') && (
-                                <div>
-                                    <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                        Status Grund
-                                    </div>
-                                    <div>
-                                        <RHFCombobox
-                                            name="statusReasonId"
-                                            control={form.control}
-                                            options={clientStatusReasons || []}
-                                            setValue={form.setValue}
-                                            placeholder="Status Grund auswählen"
-                                            showError
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                            {(statusId === 'offerToSend' ||
-                                statusId === 'contactLater' ||
-                                statusId === 'interested') && (
-                                <div>
-                                    <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                        Datum der Nachverfolgung
-                                    </div>
-                                    <div>
-                                        <RHFInput
-                                            name="followUpDate"
-                                            control={form.control}
-                                            // label="Datum der Nachverfolgung"
-                                            placeholder="TT.MM.JJJJ"
-                                            type="date"
-                                            showError
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="col-span-full">
-                                <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                    Historie Notiz
-                                </div>
-                                <RHFTextArea
-                                    name="note"
+                        </div>
+                    )}
+                    {(statusId === 'offerToSend' ||
+                        statusId === 'contactLater' ||
+                        statusId === 'interested') && (
+                        <div>
+                            <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                                Datum der Nachverfolgung
+                            </div>
+                            <div>
+                                <RHFInput
+                                    name="followUpDate"
                                     control={form.control}
-                                    placeholder="Historie hinzufügen..."
+                                    // label="Datum der Nachverfolgung"
+                                    placeholder="TT.MM.JJJJ"
+                                    type="date"
                                     showError
                                 />
                             </div>
+                        </div>
+                    )}
 
-                            <div className="col-span-full flex justify-end">
-                                <Button
-                                    type="submit"
-                                    className="min-w-[200px]"
-                                    disabled={isLoadingClientStatuses}
-                                >
-                                    Speichern & Historie hinzufügen
-                                </Button>
-                            </div>
-                        </NewCardItem>
-                    </form>
-                </Form>
-            </NewCardBody>
-        </NewCard>
+                    <div className="col-span-full">
+                        <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                            Historie Notiz
+                        </div>
+                        <RHFTextArea
+                            name="note"
+                            control={form.control}
+                            placeholder="Historie hinzufügen..."
+                            showError
+                        />
+                    </div>
+
+                    <div className="col-span-full flex justify-end">
+                        <Button
+                            type="submit"
+                            className="min-w-[200px]"
+                            disabled={isLoadingClientStatuses}
+                        >
+                            Speichern & Historie hinzufügen
+                        </Button>
+                    </div>
+                </NewCardItem>
+            </form>
+        </Form>
     );
 }

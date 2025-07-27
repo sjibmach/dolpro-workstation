@@ -132,7 +132,7 @@ export function InterpreterHistroyAddForm({
             loading: 'Historie wird hinzugefügt...',
             success: 'Historie erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen der Historie',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {
@@ -147,115 +147,106 @@ export function InterpreterHistroyAddForm({
     };
 
     return (
-        <NewCard>
-            <NewCardHeader>Bearbeiten</NewCardHeader>
-            {/* <pre>{JSON.stringify(interpreterStatusReasons, null, 2)}</pre> */}
-            <NewCardBody>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <NewCardItem
-                            className="grid gap-x-2 gap-y-4 sm:grid-cols-2"
-                            last
-                            first
-                        >
-                            <div>
-                                <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                    Status
-                                </div>
-                                {isLoadingInterpreterStatuses ? (
-                                    <>Lade Status...</>
-                                ) : (
-                                    <RHFCombobox
-                                        name="statusId"
-                                        control={form.control}
-                                        options={interpreterStatuses || []}
-                                        setValue={form.setValue}
-                                        placeholder="Status auswählen"
-                                        showError
-                                    />
-                                )}
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+                <NewCardItem
+                    className="grid gap-x-2 gap-y-4 sm:grid-cols-2"
+                    last
+                    first
+                >
+                    <div>
+                        <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                            Status
+                        </div>
+                        {isLoadingInterpreterStatuses ? (
+                            <>Lade Status...</>
+                        ) : (
+                            <RHFCombobox
+                                name="statusId"
+                                control={form.control}
+                                options={interpreterStatuses || []}
+                                setValue={form.setValue}
+                                placeholder="Status auswählen"
+                                showError
+                            />
+                        )}
+                    </div>
+                    {(statusId === 'rejected' ||
+                        statusId === 'blocked' ||
+                        statusId === 'noInterest' ||
+                        statusId === 'failedContact') && (
+                        <div>
+                            <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                                Status Grund
                             </div>
-                            {(statusId === 'rejected' ||
-                                statusId === 'blocked' ||
-                                statusId === 'noInterest' ||
-                                statusId === 'failedContact') && (
-                                <div>
-                                    <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                        Status Grund
-                                    </div>
-                                    {isLoadingInterpreterStatusReasons ? (
-                                        <>Lade Statusgründe...</>
-                                    ) : (
-                                        <RHFCombobox
-                                            name="statusReasonId"
-                                            control={form.control}
-                                            options={
-                                                interpreterStatusReasons || []
-                                            }
-                                            setValue={form.setValue}
-                                            placeholder="Status Grund auswählen"
-                                            showError
-                                        />
-                                    )}
-                                </div>
-                            )}
-                            {(statusId === 'new' ||
-                                statusId === 'contactLater') && (
-                                <div>
-                                    <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                        Datum der Nachverfolgung
-                                    </div>
-                                    <RHFInput
-                                        name="followUpDate"
-                                        control={form.control}
-                                        // label="Datum der Nachverfolgung"
-                                        placeholder="TT.MM.JJJJ"
-                                        type="date"
-                                        showError
-                                    />
-                                </div>
-                            )}
-                            {statusId === 'interviewPlanned' && (
-                                <div>
-                                    <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                        Vorstellungsgespräch
-                                    </div>
-                                    <RHFInput
-                                        name="interviewDate"
-                                        control={form.control}
-                                        // label="Datum der Nachverfolgung"
-                                        placeholder="TT.MM.JJJJ"
-                                        type="date"
-                                        showError
-                                    />
-                                </div>
-                            )}
-
-                            <div className="col-span-full">
-                                <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                    Historie Notiz
-                                </div>
-                                <RHFTextArea
-                                    name="note"
+                            {isLoadingInterpreterStatusReasons ? (
+                                <>Lade Statusgründe...</>
+                            ) : (
+                                <RHFCombobox
+                                    name="statusReasonId"
                                     control={form.control}
-                                    placeholder="Historie hinzufügen..."
+                                    options={interpreterStatusReasons || []}
+                                    setValue={form.setValue}
+                                    placeholder="Status Grund auswählen"
                                     showError
                                 />
+                            )}
+                        </div>
+                    )}
+                    {(statusId === 'new' || statusId === 'contactLater') && (
+                        <div>
+                            <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                                Datum der Nachverfolgung
                             </div>
+                            <RHFInput
+                                name="followUpDate"
+                                control={form.control}
+                                // label="Datum der Nachverfolgung"
+                                placeholder="TT.MM.JJJJ"
+                                type="date"
+                                showError
+                            />
+                        </div>
+                    )}
+                    {statusId === 'interviewPlanned' && (
+                        <div>
+                            <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                                Vorstellungsgespräch
+                            </div>
+                            <RHFInput
+                                name="interviewDate"
+                                control={form.control}
+                                // label="Datum der Nachverfolgung"
+                                placeholder="TT.MM.JJJJ"
+                                type="date"
+                                showError
+                            />
+                        </div>
+                    )}
 
-                            <div className="col-span-full flex justify-end">
-                                <Button
-                                    type="submit"
-                                    className="min-w-[200px]"
-                                    disabled={isLoading}
-                                >
-                                    Speichern & Historie hinzufügen
-                                </Button>
-                            </div>
-                        </NewCardItem>
-                    </form>
-                </Form>
-            </NewCardBody>
-        </NewCard>
+                    <div className="col-span-full">
+                        <div className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                            Historie Notiz
+                        </div>
+                        <RHFTextArea
+                            name="note"
+                            control={form.control}
+                            placeholder="Historie hinzufügen..."
+                            showError
+                        />
+                    </div>
+
+                    <div className="col-span-full flex justify-end">
+                        <Button
+                            type="submit"
+                            className="min-w-[200px]"
+                            disabled={isLoading}
+                        >
+                            Speichern & Historie hinzufügen
+                        </Button>
+                    </div>
+                </NewCardItem>
+            </form>
+        </Form>
     );
 }

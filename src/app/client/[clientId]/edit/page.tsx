@@ -58,7 +58,12 @@ const ClientEditPage = async ({ params }: { params: paramsType }) => {
     return (
         <div className="grid w-full gap-10 md:grid-cols-5">
             <NewCardContainer className="md:col-span-3">
-                <ClientHistroyAddForm client={client} />
+                <NewCard>
+                    <NewCardHeader>Bearbeiten</NewCardHeader>
+                    <NewCardBody>
+                        <ClientHistroyAddForm client={client} />
+                    </NewCardBody>
+                </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Personaldaten</span>

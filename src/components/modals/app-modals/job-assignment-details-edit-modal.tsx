@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { PiFeather } from 'react-icons/pi';
 import { useState } from 'react';
 import {
-    useQueryInterpretersForJobs,
+    useQueryInterpretersList,
     useQueryJobStatuses,
 } from '@/hooks/react-query/react-query-hooks';
 import { TJobFullOverview } from '@/lib/prismaTypes';
@@ -38,7 +38,7 @@ export function JobAssignmentDetailsEditModal({
     const [open, setOpen] = useState(false);
 
     const { data: interpreters, isLoading: isLoadingInterpreters } =
-        useQueryInterpretersForJobs();
+        useQueryInterpretersList();
     const { data: jobStatuses, isLoading: isLoadingJobStatuses } =
         useQueryJobStatuses();
 
@@ -65,13 +65,13 @@ export function JobAssignmentDetailsEditModal({
     const onSubmit = async (values: TJobAssignmenDetailsEditModal) => {
         console.log('values', values);
 
-        const promise = axios.post('/api/job/edit-assignment-details', values);
+        const promise = axios.post('/api/job/edit/assignment-details', values);
 
         toast.promise(promise, {
             loading: 'Auftragsdetails werden aktualisiert...',
             success: 'Auftragsdetails erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren der Auftragsdetails',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

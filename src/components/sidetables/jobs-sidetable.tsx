@@ -15,9 +15,9 @@ import { Badge } from '../ui/badge';
 
 import { TJobForSideTable } from '@/lib/prismaTypes';
 import { cn } from '@/lib/utils';
-import { ClientAddModal } from '@/components/modals/app-modals/client-add-modal';
 import { format } from 'date-fns';
 import { HiArrowLeft } from 'react-icons/hi2';
+import { JobAddModal } from '../modals/app-modals/job-add-modal';
 
 const JobsSidetable = ({ jobs }: { jobs: TJobForSideTable[] | undefined }) => {
     const params = useParams();
@@ -39,7 +39,7 @@ const JobsSidetable = ({ jobs }: { jobs: TJobForSideTable[] | undefined }) => {
                 </Link>
                 <div className="flex flex-1 items-center justify-between">
                     Aufträge
-                    <ClientAddModal />
+                    <JobAddModal />
                 </div>
             </NewCardHeader>
             <Input

@@ -6,6 +6,7 @@ import {
     ClientType,
     InterpreterStatus,
     InterpreterStatusReason,
+    JobCompletionStatus,
     JobPriority,
     JobStatus,
     JobType,
@@ -42,6 +43,16 @@ export const useQueryJobStatuses = () => {
         queryKey: ['job-statuses'],
         queryFn: async () =>
             fetch('/api/base-data/job-statuses').then(res => res.json()),
+    });
+};
+
+export const useQueryJobCompletionStatuses = () => {
+    return useQuery<JobCompletionStatus[]>({
+        queryKey: ['job-completion-statuses'],
+        queryFn: async () =>
+            fetch('/api/base-data/job-completion-statuses').then(res =>
+                res.json()
+            ),
     });
 };
 
@@ -87,13 +98,11 @@ export const useQueryClientStatusReasons = () => {
     });
 };
 
-export const useQueryClientsForAddingJobs = () => {
+export const useQueryClientsList = () => {
     return useQuery<TIdAndNameObject[]>({
-        queryKey: ['clients-for-adding-jobs'],
+        queryKey: ['clients-list'],
         queryFn: async () =>
-            fetch('/api/base-data/clients-for-adding-jobs').then(res =>
-                res.json()
-            ),
+            fetch('/api/base-data/clients-list').then(res => res.json()),
     });
 };
 
@@ -117,12 +126,10 @@ export const useQueryInterpreterStatusReasons = () => {
     });
 };
 
-export const useQueryInterpretersForJobs = () => {
+export const useQueryInterpretersList = () => {
     return useQuery<TIdAndNameObject[]>({
-        queryKey: ['interpreters-for-jobs'],
+        queryKey: ['interpreters-list'],
         queryFn: async () =>
-            fetch('/api/base-data/interpreters-for-jobs').then(res =>
-                res.json()
-            ),
+            fetch('/api/base-data/interpreters-list').then(res => res.json()),
     });
 };

@@ -12,6 +12,7 @@ import {
 import { differenceInCalendarDays, format } from 'date-fns';
 import JobDateConfirmation from './_components/job-date-confirmation';
 import { JobAssignmentDetailsEditModal } from '@/components/modals/app-modals/job-assignment-details-edit-modal';
+import { JobStatusEditForm } from './_components/job-status-edit-form';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,7 +46,12 @@ async function ClientPage({ params }: { params: paramsType }) {
     return (
         <div className="grid w-full gap-10 md:grid-cols-5">
             <NewCardContainer className="md:col-span-3">
-                {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
+                <NewCard>
+                    <NewCardHeader>Bearbeiten</NewCardHeader>
+                    <NewCardBody>
+                        <JobStatusEditForm job={job} />
+                    </NewCardBody>
+                </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Vermittlungsdaten</span>

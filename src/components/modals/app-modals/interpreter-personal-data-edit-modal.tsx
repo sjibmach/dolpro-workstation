@@ -100,7 +100,7 @@ export function InterpreterPersonalDataEditModal({
             loading: 'Dolmetscher wird aktualisiert...',
             success: 'Dolmetscher erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren des Dolmetschers',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

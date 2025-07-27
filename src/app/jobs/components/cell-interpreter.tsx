@@ -1,6 +1,6 @@
 'use client';
 import { Combobox } from '@/components/custom-ui/combobox';
-import { useQueryInterpretersForJobs } from '@/hooks/react-query/react-query-hooks';
+import { useQueryInterpretersList } from '@/hooks/react-query/react-query-hooks';
 import { TJobOverviewTable } from '@/lib/prismaTypes';
 import { Row } from '@tanstack/react-table';
 import axios from 'axios';
@@ -10,12 +10,12 @@ import { toast } from 'sonner';
 const CellInterpreter = ({ row }: { row: Row<TJobOverviewTable> }) => {
     const router = useRouter();
     const { data: interpreters, isLoading: isLoadingInterpreters } =
-        useQueryInterpretersForJobs();
+        useQueryInterpretersList();
     const interpreter = row.original.interpreter;
     const onChange = async (value: string) => {
         // console.log('Changed:,', value);
 
-        const promise = axios.post('/api/job/update-interpreter', {
+        const promise = axios.post('/api/job/edit/update-interpreter', {
             jobId: row.original.id,
             interpreterId: value,
         });
@@ -24,7 +24,7 @@ const CellInterpreter = ({ row }: { row: Row<TJobOverviewTable> }) => {
             loading: 'Dolmetscher wird gespeichert...',
             success: 'Dolmetscher erfolgreich gespeichert',
             error: 'Fehler beim Speichern',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

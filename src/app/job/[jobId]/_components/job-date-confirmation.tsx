@@ -36,7 +36,7 @@ const JobDateConfirmation = ({
             loading: 'Speichern...',
             success: 'Erfolgreich gespeichert',
             error: 'Fehler beim Speichern',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

@@ -117,10 +117,21 @@ const RHFCombobox = ({
                                                     key={option.id}
                                                     value={option.name}
                                                     onSelect={() => {
-                                                        setValue(
-                                                            name,
-                                                            option.id
-                                                        );
+                                                        if (
+                                                            !(
+                                                                field.value ===
+                                                                option.id
+                                                            )
+                                                        )
+                                                            setValue(
+                                                                name,
+                                                                option.id
+                                                            );
+                                                        else
+                                                            setValue(
+                                                                name,
+                                                                null
+                                                            );
                                                         setOpen(false);
                                                     }}
                                                 >

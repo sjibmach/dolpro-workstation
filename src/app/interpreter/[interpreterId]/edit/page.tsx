@@ -62,7 +62,12 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
     return (
         <div className="grid w-full gap-10 md:grid-cols-5">
             <NewCardContainer className="md:col-span-3">
-                <InterpreterHistroyAddForm interpreter={interpreter} />
+                <NewCard>
+                    <NewCardHeader>Bearbeiten</NewCardHeader>
+                    <NewCardBody>
+                        <InterpreterHistroyAddForm interpreter={interpreter} />
+                    </NewCardBody>
+                </NewCard>
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Persönliche Daten</span>

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
     useQueryCities,
-    useQueryInterpretersForJobs,
+    useQueryClientsList,
     useQueryJobModes,
     useQueryJobPriorities,
     useQueryJobStatuses,
@@ -68,7 +68,7 @@ export function JobAddModal() {
     const { data: cities, isLoading: isLoadingCities } = useQueryCities();
 
     const { data: clients, isLoading: isLoadingClients } =
-        useQueryInterpretersForJobs();
+        useQueryClientsList();
 
     const { data: jobModes, isLoading: isLoadingJobModes } = useQueryJobModes();
 
@@ -111,7 +111,7 @@ export function JobAddModal() {
             loading: 'Auftrag wird hinzugefügt...',
             success: 'Auftrag erfolgreich hinzugefügt',
             error: 'Fehler beim Hinzufügen des Auftrags',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {

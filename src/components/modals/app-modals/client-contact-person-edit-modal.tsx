@@ -77,7 +77,7 @@ export function ClientContactPersonEditModal({
             loading: 'Kontaktperson wird aktualisiert...',
             success: 'Kontaktperson erfolgreich aktualisiert',
             error: 'Fehler beim Aktualisieren der Kontaktperson',
-            position: 'top-center',
+            position: 'top-right',
         });
 
         try {
