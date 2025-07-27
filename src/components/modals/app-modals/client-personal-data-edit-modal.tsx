@@ -133,20 +133,28 @@ export function ClientPersonalDataEditModal({
                         placeholder="Kürzel"
                         showError
                     />
-                    <RHFCombobox
-                        name="clientTypeId"
-                        control={form.control}
-                        label="Organisationsart *"
-                        options={clientTypes || []}
-                        setValue={form.setValue}
-                    />
-                    <RHFCombobox
-                        name="statusId"
-                        control={form.control}
-                        label="Status *"
-                        options={clientStatuses || []}
-                        setValue={form.setValue}
-                    />
+                    {isLoadingClientTypes ? (
+                        <>Lade Client Types...</>
+                    ) : (
+                        <RHFCombobox
+                            name="clientTypeId"
+                            control={form.control}
+                            label="Organisationsart *"
+                            options={clientTypes || []}
+                            setValue={form.setValue}
+                        />
+                    )}
+                    {isLoadingClientStatuses ? (
+                        <>Lade Status...</>
+                    ) : (
+                        <RHFCombobox
+                            name="statusId"
+                            control={form.control}
+                            label="Status *"
+                            options={clientStatuses || []}
+                            setValue={form.setValue}
+                        />
+                    )}
                     <RHFInput
                         name="email"
                         control={form.control}

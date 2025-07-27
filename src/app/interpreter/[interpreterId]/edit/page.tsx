@@ -15,6 +15,7 @@ import { InterpreterPersonalDataEditModal } from '@/components/modals/app-modals
 import { InterpreterAvailabilityEditModal } from '@/components/modals/app-modals/interpreter-availability-edit-modal';
 import { InterpreterAddressEditModal } from '@/components/modals/app-modals/interpreter-address-edit-modal';
 import { InterpreterBillingEditModal } from '@/components/modals/app-modals/interpreter-billing-edit-modal';
+import { InterpreterHistroyAddForm } from '../_components/interpreter-history-add-form';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,6 +51,7 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
     return (
         <div className="grid w-full gap-10 md:grid-cols-5">
             <NewCardContainer className="md:col-span-3">
+                <InterpreterHistroyAddForm interpreter={interpreter} />
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Persönliche Daten</span>

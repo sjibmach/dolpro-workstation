@@ -56,6 +56,12 @@ export const getClientStatusReasons = async () => {
 
 export const getInterpreterStatuses = async () => {
     const result = await prisma.interpreterStatus.findMany();
+    // console.log('interpreterStatuses: ', result);
+    return result.sort(sortBySortIndex);
+};
+
+export const getInterpreterStatusReasons = async () => {
+    const result = await prisma.interpreterStatusReason.findMany();
     return result.sort(sortBySortIndex);
 };
 

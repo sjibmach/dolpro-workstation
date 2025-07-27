@@ -4,9 +4,8 @@ import {
     ClientStatus,
     ClientStatusReason,
     ClientType,
-    InterpreterLanguage,
-    InterpreterPreferredCity,
     InterpreterStatus,
+    InterpreterStatusReason,
     JobPriority,
     JobStatus,
     JobType,
@@ -103,6 +102,16 @@ export const useQueryInterpreterStatuses = () => {
         queryKey: ['interpreter-statuses'],
         queryFn: async () =>
             fetch('/api/base-data/interpreter-statuses').then(res =>
+                res.json()
+            ),
+    });
+};
+
+export const useQueryInterpreterStatusReasons = () => {
+    return useQuery<InterpreterStatusReason[]>({
+        queryKey: ['interpreter-status-reason'],
+        queryFn: async () =>
+            fetch('/api/base-data/interpreter-status-reasons').then(res =>
                 res.json()
             ),
     });

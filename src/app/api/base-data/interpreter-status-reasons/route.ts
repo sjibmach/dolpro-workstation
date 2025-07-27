@@ -4,7 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-    console.log('================== GET /api/base-data/client-status-reasons');
+    console.log(
+        '================== GET /api/base-data/interpreter-status-reason'
+    );
 
     try {
         const result = await getInterpreterStatusReasons();

@@ -10,8 +10,8 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
-    useQueryInterpreterStatuses,
     useQueryClientStatusReasons,
+    useQueryClientStatuses,
 } from '@/hooks/react-query/react-query-hooks';
 import {
     NewCard,
@@ -40,7 +40,7 @@ export function ClientHistroyAddForm({ client }: { client: Client }) {
     const router = useRouter();
 
     const { data: clientStatuses, isLoading: isLoadingClientStatuses } =
-        useQueryInterpreterStatuses();
+        useQueryClientStatuses();
 
     const {
         data: clientStatusReasons,

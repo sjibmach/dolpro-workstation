@@ -69,17 +69,26 @@ model JobPriority {
 // ----------------------
 
 model User {
-    id                     String          @id @default(cuid())
-    salutation             String?
-    firstName              String?
-    lastName               String
-    email                  String          @unique
-    createdClients         Client[]        @relation("CreatedClients")
-    updatedClients         Client[]        @relation("UpdatedClients")
+    id         String  @id @default(cuid())
+    salutation String?
+    firstName  String?
+    lastName   String
+    email      String  @unique
+
+    creatorClients Client[] @relation("CreatorClients")
+    updatorClients Client[] @relation("UpdatorClients")
+
     creatorClientHistories ClientHistory[] @relation("CreatorClientHistories")
     updatorClientHistories ClientHistory[] @relation("UpdatorClientHistories")
-    creatorJob             Job[]           @relation("CreatorJob")
-    updatorJob             Job[]           @relation("UpdatorJob")
+
+    creatorJobs Job[] @relation("CreatorJobs")
+    updatorJobs Job[] @relation("UpdatorJobs")
+
+    creatorInterpreters Interpreter[] @relation("CreatorInterpreters")
+    updatorInterpreters Interpreter[] @relation("UpdatorInterpreters")
+
+    creatorInterpreterHistories InterpreterHistory[] @relation("CreatorInterpreterHistories")
+    updatorInterpreterHistories InterpreterHistory[] @relation("UpdatorInterpreterHistories")
 
     @@map("users")
 }
@@ -114,45 +123,13 @@ model Client {
 
     createdAt DateTime @default(now())
     creatorId String?
-    creator   User?    @relation("CreatedClients", fields: [creatorId], references: [id])
+    creator   User?    @relation("CreatorClients", fields: [creatorId], references: [id])
 
     updatedAt DateTime @updatedAt
     updatorId String?
-    updator   User?    @relation("UpdatedClients", fields: [updatorId], references: [id])
+    updator   User?    @relation("UpdatorClients", fields: [updatorId], references: [id])
 
     @@map("clients")
-}
-
-enum ClientStatusId {
-    new
-    contacting
-    failedContact
-    interested
-    offerToSend
-    offerSent
-    negotiation
-    contactLater
-    activeWithoutContract
-    contracted
-    inactive
-    notInterested
-    blacklisted
-}
-
-enum ClientStatusEnum {
-    new // Neu – noch kein Kontakt
-    contacting // Kontaktaufnahme läuft
-    failedContact // Kontaktaufnahme erfolglos
-    interested // Interessiert – weitere Gespräche geplant
-    offerToSend // Angebot senden
-    offerSent // Angebot verschickt
-    negotiation // Vertragsverhandlung
-    contactLater // Später erneut kontaktieren
-    activeWithoutContract // Zusammenarbeit ohne Vertrag
-    contracted // Zusammenarbeit mit Vertrag
-    inactive // Inaktiv – aktuell keine Zusammenarbeit
-    notInterested // Kein Interesse
-    blacklisted // Nicht weiter kontaktieren (gesperrt)
 }
 
 model ClientStatus {
@@ -164,21 +141,6 @@ model ClientStatus {
     clientHistory ClientHistory[]
 
     @@map("client_statuses")
-}
-
-enum ClientStatusReasonEnum {
-    noNeed // Kein Bedarf
-    hasPartner // Bereits fester Partner
-    tooExpensive // Zu teuer
-    usesInternal // Nutzt interne Lösung
-    tooComplicated // Ablauf zu kompliziert
-    contractIssues // Vertragsbedingungen unpassend
-    privacyConcerns // Datenschutzbedenken
-    badCommunication // Kommunikation unzureichend
-    noOnline // Möchte nur in Präsenz – kein Online
-    badPayment // Schlechte Zahlungsmoral / Zahlungsverzug
-    rude // Unfreundlicher Umgangston
-    unethical // Diskriminierendes oder unethisches Verhalten
 }
 
 model ClientStatusReason {
@@ -253,52 +215,96 @@ model ClientHistory {
 // ----------------------
 
 model Interpreter {
-    id                String                     @id @default(cuid())
-    code              String                     @unique
-    codeNumber        Int                        @unique
-    firstName         String?
-    lastName          String
-    email             String?
-    phone1            String?
-    phone2            String?
-    gender            String?
-    birthDate         DateTime?
-    street            String?
-    zip               String?
-    cityId            String?
-    city              City?                      @relation(fields: [cityId], references: [id])
-    offersRemote      Boolean?                   @default(false)
-    offersOnSite      Boolean?                   @default(false)
-    defaultHourlyRate Float?
-    kmRate            Float?
-    availability      String?
-    car               Boolean?                   @default(false)
-    iban              String?
-    startDate         DateTime?
-    endDate           DateTime?
-    interviewDate     DateTime?
-    googleContactId   String?
-    googleEventId     String?
-    statusId          String                     @default("new")
-    status            InterpreterStatus          @relation(fields: [statusId], references: [id])
-    notes             String?
-    createdAt         DateTime                   @default(now())
-    updatedAt         DateTime                   @updatedAt
-    preferredCities   InterpreterPreferredCity[]
-    languages         InterpreterLanguage[]
-    jobs              Job[]
+    id                 String                     @id @default(cuid())
+    code               String                     @unique
+    codeNumber         Int                        @unique
+    firstName          String?
+    lastName           String
+    email              String?
+    phone1             String?
+    phone2             String?
+    gender             String?
+    birthDate          DateTime?
+    street             String?
+    zip                String?
+    cityId             String?
+    city               City?                      @relation(fields: [cityId], references: [id])
+    offersRemote       Boolean?                   @default(false)
+    offersOnSite       Boolean?                   @default(false)
+    defaultHourlyRate  Float?
+    kmRate             Float?
+    availability       String?
+    car                Boolean?                   @default(false)
+    iban               String?
+    startDate          DateTime?
+    endDate            DateTime?
+    interviewDate      DateTime?
+    googleContactId    String?
+    googleEventId      String?
+    statusId           String                     @default("new")
+    status             InterpreterStatus          @relation(fields: [statusId], references: [id])
+    statusReasonId     String?
+    statusReason       InterpreterStatusReason?   @relation(fields: [statusReasonId], references: [id])
+    statusFollowUpDate DateTime?
+    notes              String?
+    preferredCities    InterpreterPreferredCity[]
+    languages          InterpreterLanguage[]
+    jobs               Job[]
+    InterpreterHistory InterpreterHistory[]
+
+    createdAt DateTime @default(now())
+    creatorId String?
+    creator   User?    @relation("CreatorInterpreters", fields: [creatorId], references: [id])
+
+    updatedAt DateTime @updatedAt
+    updatorId String?
+    updator   User?    @relation("UpdatorInterpreters", fields: [updatorId], references: [id])
 
     @@map("interpreters")
 }
 
+model InterpreterHistory {
+    id            String                   @id @default(cuid())
+    interpreterId String
+    interpreter   Interpreter              @relation(fields: [interpreterId], references: [id], onDelete: Cascade)
+    newStatusId   String? // nur wenn Status geändert wurde
+    newStatus     InterpreterStatus?       @relation(fields: [newStatusId], references: [id])
+    reasonId      String? // z. B. bei Status „notInterested“
+    reason        InterpreterStatusReason? @relation(fields: [reasonId], references: [id])
+    followUpDate  DateTime? // Wiedervorlage, z. B. bei „später kontaktieren“
+    note          String? // Freitext-Eintrag
+
+    createdAt DateTime @default(now())
+    creatorId String?
+    creator   User?    @relation("CreatorInterpreterHistories", fields: [creatorId], references: [id])
+
+    updatorId String?
+    updator   User?    @relation("UpdatorInterpreterHistories", fields: [updatorId], references: [id])
+    updatedAt DateTime @updatedAt
+
+    @@map("interpreter_histories")
+}
+
 model InterpreterStatus {
-    id           String        @id @default(cuid())
-    name         String
-    active       Boolean       @default(true)
-    sortIndex    Int?
-    interpreters Interpreter[]
+    id                 String               @id @default(cuid())
+    name               String
+    active             Boolean              @default(true)
+    sortIndex          Int?
+    interpreters       Interpreter[]
+    InterpreterHistory InterpreterHistory[]
 
     @@map("interpreter_statuses")
+}
+
+model InterpreterStatusReason {
+    id                 String               @id @default(cuid())
+    name               String
+    active             Boolean              @default(true)
+    sortIndex          Int?
+    interpreters       Interpreter[]
+    interpreterHistory InterpreterHistory[]
+
+    @@map("interpreter_status_reasons")
 }
 
 model InterpreterPreferredCity {
@@ -369,11 +375,11 @@ model Job {
 
     createdAt DateTime @default(now())
     creatorId String?
-    creator   User?    @relation("CreatorJob", fields: [creatorId], references: [id])
+    creator   User?    @relation("CreatorJobs", fields: [creatorId], references: [id])
 
     updatedAt DateTime @updatedAt
     updatorId String?
-    updator   User?    @relation("UpdatorJob", fields: [updatorId], references: [id])
+    updator   User?    @relation("UpdatorJobs", fields: [updatorId], references: [id])
 
     @@map("jobs")
 }
