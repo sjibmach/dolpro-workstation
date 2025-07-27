@@ -10,12 +10,13 @@ import {
 } from '@/components/custom-ui/new-card';
 import { TInterpreterFullOverview } from '@/lib/prismaTypes';
 import { format } from 'date-fns';
-import { HiCheck, HiCheckCircle, HiOutlineCheckCircle } from 'react-icons/hi2';
+import { HiOutlineCheckCircle } from 'react-icons/hi2';
 import { InterpreterPersonalDataEditModal } from '@/components/modals/app-modals/interpreter-personal-data-edit-modal';
 import { InterpreterAvailabilityEditModal } from '@/components/modals/app-modals/interpreter-availability-edit-modal';
 import { InterpreterAddressEditModal } from '@/components/modals/app-modals/interpreter-address-edit-modal';
 import { InterpreterBillingEditModal } from '@/components/modals/app-modals/interpreter-billing-edit-modal';
 import { InterpreterHistroyAddForm } from '../_components/interpreter-history-add-form';
+import { Badge } from '@/components/ui/badge';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +42,16 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                     },
                 },
                 jobs: true,
+                interpreterHistory: {
+                    include: {
+                        newStatus: true,
+                        reason: true,
+                        creator: true,
+                    },
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                },
             },
         });
 
@@ -295,21 +306,23 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                     <NewCardHeader>Verlauf</NewCardHeader>
 
                     <NewCardBody>
-                        <NewCardItem>
+                        {/* <NewCardItem>
                             Keine Verlaufsdaten vorhanden.
-                        </NewCardItem>
-                        {/* {client.clientHistory &&
-                        client.clientHistory.length > 0 ? (
-                            client.clientHistory.map(history => (
+                        </NewCardItem> */}
+                        {interpreter.interpreterHistory &&
+                        interpreter.interpreterHistory.length > 0 ? (
+                            interpreter.interpreterHistory.map(history => (
                                 <NewCardItem
                                     key={history.id}
                                     first={
-                                        history === client.clientHistory?.[0]
+                                        history ===
+                                        interpreter.interpreterHistory?.[0]
                                     }
                                     last={
                                         history ===
-                                        client.clientHistory?.[
-                                            client.clientHistory.length - 1
+                                        interpreter.interpreterHistory?.[
+                                            interpreter.interpreterHistory
+                                                .length - 1
                                         ]
                                     }
                                 >
@@ -381,7 +394,7 @@ const InterpreterEditPage = async ({ params }: { params: paramsType }) => {
                             <NewCardItem last first className="text-gray-500">
                                 Keine Verlaufsdaten vorhanden.
                             </NewCardItem>
-                        )} */}
+                        )}
                     </NewCardBody>
                 </NewCard>
             </NewCardContainer>

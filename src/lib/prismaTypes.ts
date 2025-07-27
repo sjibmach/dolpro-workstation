@@ -69,5 +69,12 @@ export type TInterpreterFullOverview = Prisma.InterpreterGetPayload<{
         };
         status: true;
         jobs: true;
+        interpreterHistory: {
+            include: {
+                newStatus: true;
+                reason: true;
+                creator: true;
+            };
+        };
     };
 }>;

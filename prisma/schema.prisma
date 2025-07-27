@@ -250,7 +250,7 @@ model Interpreter {
     preferredCities    InterpreterPreferredCity[]
     languages          InterpreterLanguage[]
     jobs               Job[]
-    InterpreterHistory InterpreterHistory[]
+    interpreterHistory InterpreterHistory[]
 
     createdAt DateTime @default(now())
     creatorId String?
@@ -291,7 +291,7 @@ model InterpreterStatus {
     active             Boolean              @default(true)
     sortIndex          Int?
     interpreters       Interpreter[]
-    InterpreterHistory InterpreterHistory[]
+    interpreterHistory InterpreterHistory[]
 
     @@map("interpreter_statuses")
 }
