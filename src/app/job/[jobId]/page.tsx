@@ -13,6 +13,7 @@ import { differenceInCalendarDays, format } from 'date-fns';
 import JobDateConfirmation from './_components/job-date-confirmation';
 import { JobAssignmentDetailsEditModal } from '@/components/modals/app-modals/job-assignment-details-edit-modal';
 import { JobStatusEditForm } from './_components/job-status-edit-form';
+import { JobHistoryList } from './_components/job-histories-list';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,10 @@ async function ClientPage({ params }: { params: paramsType }) {
             priority: true,
             status: true,
             jobMode: true,
+            jobHistory: {
+                include: { creator: true },
+                orderBy: { createdAt: 'desc' },
+            },
         },
     });
 
@@ -283,6 +288,13 @@ async function ClientPage({ params }: { params: paramsType }) {
                             /> */}
                         </NewCardItem>
                     </NewCardBody>
+                </NewCard>
+            </NewCardContainer>
+            <NewCardContainer className="md:col-span-2">
+                <NewCard>
+                    <NewCardHeader>Verlauf</NewCardHeader>
+
+                    <JobHistoryList history={job.jobHistory} />
                 </NewCard>
             </NewCardContainer>
         </div>

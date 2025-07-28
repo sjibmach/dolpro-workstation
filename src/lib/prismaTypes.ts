@@ -45,6 +45,11 @@ export type TJobFullOverview = Prisma.JobGetPayload<{
         priority: true;
         status: true;
         jobMode: true;
+        jobHistory: {
+            include: {
+                creator: true;
+            };
+        };
     };
 }>;
 

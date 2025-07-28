@@ -375,7 +375,7 @@ model Job {
     isConfirmedClient      Boolean              @default(false)
     jobCompletionStatus    JobCompletionStatus? @relation(fields: [jobCompletionStatusId], references: [id])
     jobCompletionStatusId  String?
-    JobHistory             JobHistory[]
+    jobHistory             JobHistory[]
 
     createdAt DateTime @default(now())
     creatorId String?

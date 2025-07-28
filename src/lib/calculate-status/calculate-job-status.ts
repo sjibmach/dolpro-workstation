@@ -63,6 +63,9 @@ export function calculateJobStatus(input: Input): {
             ? jobCompletionStatusId
             : null;
 
+    console.log('interpreterId: ', interpreterId);
+    console.log('validCompletionStatus: ', validCompletionStatus);
+
     if (
         validCompletionStatus === 'canceledByClient' ||
         validCompletionStatus === 'canceledByInterpreter' ||

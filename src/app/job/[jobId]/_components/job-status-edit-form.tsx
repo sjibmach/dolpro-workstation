@@ -146,6 +146,10 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
             jobDate,
         });
 
+        values.statusId = newStatus.jobStatusId;
+        values.jobCompletionStatusId = newStatus.jobCompletionStatusId;
+
+        // form.setValues to update dirty fields
         form.setValue('statusId', newStatus.jobStatusId, { shouldDirty: true });
         form.setValue(
             'jobCompletionStatusId',
@@ -154,6 +158,8 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
         );
 
         console.log('values', values);
+
+        console.log('dirtyFields', form.formState.dirtyFields);
 
         const historyEntries = generateJobHistoryEntries({
             values: form.getValues(),
