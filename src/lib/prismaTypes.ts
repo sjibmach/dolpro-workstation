@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { JobHistory, Prisma } from '@prisma/client';
 
 export type TClientFullOverview = Prisma.ClientGetPayload<{
     include: {

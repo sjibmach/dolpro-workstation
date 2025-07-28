@@ -90,6 +90,9 @@ model User {
     creatorInterpreterHistories InterpreterHistory[] @relation("CreatorInterpreterHistories")
     updatorInterpreterHistories InterpreterHistory[] @relation("UpdatorInterpreterHistories")
 
+    creatorJobHistories JobHistory[] @relation("CreatorJobHistories")
+    updatorJobHistories JobHistory[] @relation("UpdatorJobHistories")
+
     @@map("users")
 }
 
@@ -372,6 +375,7 @@ model Job {
     isConfirmedClient      Boolean              @default(false)
     jobCompletionStatus    JobCompletionStatus? @relation(fields: [jobCompletionStatusId], references: [id])
     jobCompletionStatusId  String?
+    JobHistory             JobHistory[]
 
     createdAt DateTime @default(now())
     creatorId String?
@@ -382,6 +386,27 @@ model Job {
     updator   User?    @relation("UpdatorJobs", fields: [updatorId], references: [id])
 
     @@map("jobs")
+}
+
+model JobHistory {
+    id    String @id @default(cuid())
+    jobId String
+    job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+    field         String? // z. B. 'fee', 'statusId', etc. (optional bei reinem Kommentar)
+    newValue      String?
+    comment       String? // Freitext für Erklärung oder Einzel-Kommentar
+    updateGroupId String? // zum Gruppieren von Updates (optional)
+
+    createdAt DateTime @default(now())
+    creatorId String?
+    creator   User?    @relation("CreatorJobHistories", fields: [creatorId], references: [id])
+
+    updatorId String?
+    updator   User?    @relation("UpdatorJobHistories", fields: [updatorId], references: [id])
+    updatedAt DateTime @updatedAt
+
+    @@map("job_histories")
 }
 
 model JobMode {

@@ -92,11 +92,13 @@ const RHFCombobox = ({
                                         !field.value && 'text-muted-foreground'
                                     )}
                                 >
-                                    {field.value
-                                        ? localOptions.find(
-                                              opt => opt.id === field.value
-                                          )?.name
-                                        : placeholder || 'Auswählen'}
+                                    <span className="truncate">
+                                        {field.value
+                                            ? localOptions.find(
+                                                  opt => opt.id === field.value
+                                              )?.name
+                                            : placeholder || 'Auswählen'}
+                                    </span>
                                     <ChevronsUpDown className="opacity-50" />
                                 </Button>
                             </FormControl>
@@ -125,26 +127,29 @@ const RHFCombobox = ({
                                                         )
                                                             setValue(
                                                                 name,
-                                                                option.id
+                                                                option.id,
+                                                                {
+                                                                    shouldDirty: true,
+                                                                }
                                                             );
                                                         else
                                                             setValue(
                                                                 name,
-                                                                null
+                                                                null,
+                                                                {
+                                                                    shouldDirty: true,
+                                                                }
                                                             );
                                                         setOpen(false);
                                                     }}
                                                 >
-                                                    {option.name}
-                                                    <Check
-                                                        className={cn(
-                                                            'ml-auto',
-                                                            option.id ===
-                                                                field.value
-                                                                ? 'opacity-100'
-                                                                : 'opacity-0'
-                                                        )}
-                                                    />
+                                                    <span className="truncate">
+                                                        {option.name}
+                                                    </span>
+                                                    {option.id ===
+                                                        field.value && (
+                                                        <Check className="ml-auto" />
+                                                    )}
                                                 </CommandItem>
                                             ))}
                                         </CommandGroup>

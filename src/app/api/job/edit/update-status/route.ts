@@ -1,21 +1,24 @@
-import { TJobStatusEditForm } from '@/app/job/[jobId]/_components/job-status-edit-form';
-import { calculateJobStatus } from '@/lib/calculate-status/calculate-job-status';
 import { prisma } from '@/lib/prisma';
+import { TUpdateJobStatusPayload } from '@/lib/types';
 import { NextResponse } from 'next/server';
+import { nanoid } from 'nanoid';
 
 export async function POST(req: Request) {
     // console.log('------------------------------------ JOB UPDATE INTERPRETER');
-    const body: TJobStatusEditForm = await req.json();
+    const body: TUpdateJobStatusPayload = await req.json();
 
     const {
-        id,
-        isConfirmedClient,
-        isConfirmedInterpreter,
-        statusId,
-        interpreterId,
-        jobCompletionStatusId,
-        jobDate,
-        note,
+        values: {
+            id,
+            statusId,
+            isConfirmedClient,
+            isConfirmedInterpreter,
+            interpreterId,
+            jobCompletionStatusId,
+            jobDate,
+            note,
+        },
+        historyEntries,
     } = body;
 
     // Validate required fields
@@ -26,14 +29,6 @@ export async function POST(req: Request) {
         );
     }
 
-    const newStatus = calculateJobStatus({
-        interpreterId,
-        isConfirmedClient,
-        isConfirmedInterpreter,
-        jobCompletionStatusId,
-        jobDate,
-    });
-
     try {
         await prisma.job.update({
             where: { id },
@@ -42,10 +37,33 @@ export async function POST(req: Request) {
                 isConfirmedClient,
                 isConfirmedInterpreter,
                 jobDate: jobDate ? new Date(jobDate) : null,
-                statusId: newStatus.jobStatusId,
-                jobCompletionStatusId: newStatus.jobCompletionStatusId,
+                statusId,
+                jobCompletionStatusId,
             },
         });
+
+        // 2. Historieneinträge speichern (falls vorhanden)
+
+        const hasFieldUpdates = historyEntries.some(
+            entry => entry.field !== null
+        );
+        const shouldGroup = historyEntries.length > 1 && hasFieldUpdates;
+        const updateGroupId = shouldGroup ? nanoid() : null;
+
+        if (historyEntries.length > 0) {
+            const creatorId = 'ibrahim'; // TODO: aus Session holen
+
+            await prisma.jobHistory.createMany({
+                data: historyEntries.map(entry => ({
+                    jobId: id,
+                    field: entry.field ?? null,
+                    newValue: entry.newValue ?? null,
+                    comment: entry.comment ?? null,
+                    updateGroupId,
+                    creatorId,
+                })),
+            });
+        }
 
         return NextResponse.json({
             message: 'success',

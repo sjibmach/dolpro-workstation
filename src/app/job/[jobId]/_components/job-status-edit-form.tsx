@@ -21,6 +21,8 @@ import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 import { RHFRadioGroupCards } from '@/components/rhf/rhf-radio-group-cards';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { calculateJobStatus } from '@/lib/calculate-status/calculate-job-status';
+import { THistoryEntry } from '@/lib/types';
 
 const JobStatusEditFormSchema = z.object({
     id: z.string(),
@@ -63,20 +65,6 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
                 : null,
             note: '',
         },
-        values: {
-            id: job.id,
-            interpreterId: job.interpreter?.id || null,
-            statusId: job.statusId,
-            jobDate: job.jobDate
-                ? new Date(job.jobDate).toISOString().split('T')[0]
-                : '',
-            isConfirmedClient: !!job.isConfirmedClient,
-            isConfirmedInterpreter: !!job.isConfirmedInterpreter,
-            jobCompletionStatusId: job.jobCompletionStatusId
-                ? job.jobCompletionStatusId
-                : null,
-            note: '',
-        },
     });
 
     const interpreterId = form.watch('interpreterId');
@@ -99,10 +87,6 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
 
     const isFuture = jobDateObj ? jobDateObj > today : false;
     const isTodayOrPast = jobDateObj ? jobDateObj <= today : false;
-
-    const isCanceled = form
-        .getValues('jobCompletionStatusId')
-        ?.startsWith('canceled');
 
     const filteredCompletionStatuses = jobCompletionStatuses?.filter(status => {
         // Immer ausgewählte Optionen zulassen
@@ -153,9 +137,33 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
             values.isConfirmedClient = false;
             values.isConfirmedInterpreter = false;
         }
+
+        const newStatus = calculateJobStatus({
+            interpreterId,
+            isConfirmedClient,
+            isConfirmedInterpreter,
+            jobCompletionStatusId,
+            jobDate,
+        });
+
+        form.setValue('statusId', newStatus.jobStatusId, { shouldDirty: true });
+        form.setValue(
+            'jobCompletionStatusId',
+            newStatus.jobCompletionStatusId,
+            { shouldDirty: true }
+        );
+
         console.log('values', values);
 
-        const promise = axios.post('/api/job/edit/update-status', values);
+        const historyEntries = generateJobHistoryEntries({
+            values: form.getValues(),
+            dirtyFields: form.formState.dirtyFields,
+        });
+
+        const promise = axios.post('/api/job/edit/update-status', {
+            values,
+            historyEntries,
+        });
 
         toast.promise(promise, {
             loading: 'Auftragsdetails werden aktualisiert...',
@@ -170,10 +178,12 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
             await promise;
         } catch (error) {
             console.error('Error updating contact person:', error);
+            form.reset();
         } finally {
             setIsLoading(false);
-            // form.reset();
             router.refresh();
+            form.reset(form.getValues());
+            form.setValue('note', '');
         }
     };
 
@@ -221,7 +231,7 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
                                 <RHFSwitch
                                     name="isConfirmedInterpreter"
                                     control={form.control}
-                                    description="Dolmetscher besätigte den Termin"
+                                    description="Dolmetscher bestätigte Termin"
                                 />
                             </div>
 
@@ -232,7 +242,7 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
                                 <RHFSwitch
                                     name="isConfirmedClient"
                                     control={form.control}
-                                    description="Auftragsgeber besätigte den Termin"
+                                    description="Auftragsgeber bestätigte Termin"
                                 />
                             </div>
                         </>
@@ -267,4 +277,62 @@ export function JobStatusEditForm({ job }: { job: TJobFullOverview }) {
             </form>
         </Form>
     );
+}
+
+type GenerateJobHistoryOptions = {
+    values: TJobStatusEditForm;
+    dirtyFields: Record<string, boolean>;
+};
+
+export function generateJobHistoryEntries({
+    values,
+    dirtyFields,
+}: GenerateJobHistoryOptions): THistoryEntry[] {
+    const entries: THistoryEntry[] = [];
+
+    // explizit erlaubte Felder (kein jobCompletionStatusId!)
+    const fieldMap: { [key: string]: keyof typeof values } = {
+        interpreterId: 'interpreterId',
+        jobDate: 'jobDate',
+        isConfirmedInterpreter: 'isConfirmedInterpreter',
+        isConfirmedClient: 'isConfirmedClient',
+        statusId: 'statusId',
+    };
+
+    // durchgehen, aber nur erlaubte Felder & geänderte Werte
+    for (const field of Object.keys(fieldMap)) {
+        if (dirtyFields[field]) {
+            const rawValue = values[fieldMap[field]];
+            entries.push({
+                field,
+                newValue:
+                    rawValue !== null && rawValue !== undefined
+                        ? String(rawValue)
+                        : null,
+            });
+        }
+    }
+
+    const note = values.note?.trim();
+    const hasNote = !!note;
+
+    if (hasNote) {
+        if (entries.length > 0) {
+            // Hinweis zu Änderungen
+            entries.push({
+                field: 'note',
+                newValue: null,
+                comment: note,
+            });
+        } else {
+            // Nur Kommentar, keine Feldänderung
+            entries.push({
+                field: null,
+                newValue: null,
+                comment: note,
+            });
+        }
+    }
+
+    return entries;
 }
