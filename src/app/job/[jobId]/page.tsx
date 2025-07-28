@@ -14,6 +14,8 @@ import JobDateConfirmation from './_components/job-date-confirmation';
 import { JobAssignmentDetailsEditModal } from '@/components/modals/app-modals/job-assignment-details-edit-modal';
 import { JobStatusEditForm } from './_components/job-status-edit-form';
 import { JobHistoryList } from './_components/job-histories-list';
+import { JobBasicDetailsEditModal } from '@/components/modals/app-modals/job-basic-details-edit-modal';
+import { JobPlaceTimeEditModal } from '@/components/modals/app-modals/job-place-time-edit-modal';
 
 export const dynamic = 'force-dynamic';
 
@@ -148,7 +150,7 @@ async function ClientPage({ params }: { params: paramsType }) {
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Allgemeine Daten</span>
 
-                        {/* <ClientPersonalDataEditModal client={client} /> */}
+                        <JobBasicDetailsEditModal job={job} />
                     </NewCardHeader>
 
                     <NewCardBody>
@@ -194,6 +196,7 @@ async function ClientPage({ params }: { params: paramsType }) {
                 <NewCard>
                     <NewCardHeader className="flex items-center justify-between">
                         <span>Ort & Zeit</span>
+                        <JobPlaceTimeEditModal job={job} />
                     </NewCardHeader>
 
                     <NewCardBody>

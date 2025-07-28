@@ -18,7 +18,7 @@ import {
 } from '@/hooks/react-query/react-query-hooks';
 import { TJobFullOverview } from '@/lib/prismaTypes';
 
-const JobDetailsEditModalSchema = z.object({
+const JobAssignmentDetailsEditSchema = z.object({
     id: z.string(),
     interpreterId: z.string().nullable().optional(),
     statusId: z.string(),
@@ -26,7 +26,7 @@ const JobDetailsEditModalSchema = z.object({
 });
 
 export type TJobAssignmenDetailsEditModal = z.infer<
-    typeof JobDetailsEditModalSchema
+    typeof JobAssignmentDetailsEditSchema
 >;
 
 export function JobAssignmentDetailsEditModal({
@@ -43,7 +43,7 @@ export function JobAssignmentDetailsEditModal({
         useQueryJobStatuses();
 
     const form = useForm<TJobAssignmenDetailsEditModal>({
-        resolver: zodResolver(JobDetailsEditModalSchema),
+        resolver: zodResolver(JobAssignmentDetailsEditSchema),
         defaultValues: {
             id: job.id,
             interpreterId: job.interpreter?.id || null,

@@ -138,6 +138,15 @@ export async function POST(req: Request) {
             },
         });
 
+        await prisma.jobHistory.create({
+            data: {
+                jobId: newJob.id,
+                field: null,
+                comment: 'Erstellung',
+                creatorId: 'ibrahim',
+            },
+        });
+
         return NextResponse.json({
             message: 'success',
             data: { id: newJob.id },

@@ -13,12 +13,7 @@ import {
     useQueryInterpreterStatuses,
     useQueryInterpreterStatusReasons,
 } from '@/hooks/react-query/react-query-hooks';
-import {
-    NewCard,
-    NewCardBody,
-    NewCardHeader,
-    NewCardItem,
-} from '@/components/custom-ui/new-card';
+import { NewCardItem } from '@/components/custom-ui/new-card';
 import { RHFTextArea } from '@/components/rhf/rhf-textarea';
 import { Button } from '@/components/ui/button';
 import { TInterpreterFullOverview } from '@/lib/prismaTypes';
